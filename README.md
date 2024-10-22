@@ -3,3 +3,8 @@
 
 
 * 使用uiauto.dev查看ui组件
+```
+pip3 install uiautodev
+# 启动
+uiauto.dev
+```
