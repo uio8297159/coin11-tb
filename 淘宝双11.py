@@ -9,6 +9,7 @@ d.app_start("com.taobao.taobao", stop=True)
 screen_width = d.info['displayWidth']
 screen_height = d.info['displayHeight']
 time.sleep(2)
+in_search = False
 
 
 def check_close():
@@ -23,34 +24,37 @@ def check_chars_exist(arr, text):
 
 
 def operate_task():
+    global in_search
     start_time = time.time()
     taolive_btn = d(resourceId="com.taobao.taobao:id/taolive_close_btn")
     if taolive_btn.exists:
         time.sleep(20)
-        taolive_btn.click()
+        while True:
+            taolive_btn = d(resourceId="com.taobao.taobao:id/taolive_close_btn")
+            if not taolive_btn.exists:
+                break
+            d.press("back")
+            time.sleep(5)
     else:
         while True:
             if time.time() - start_time > 20:
                 break
-            time.sleep(1)
             d.swipe_ext(Direction.FORWARD)
             time.sleep(3)
             d.swipe_ext(Direction.BACKWARD)
             time.sleep(3)
-        while True:
+        d.press("back")
+        if in_search:
+            time.sleep(2)
+            in_search = False
             d.press("back")
-            time.sleep(5)
-            find_text = d(text="做任务向前冲")
-            print(find_text.info)
-            if not find_text.exists(timeout=5):
-                d.press("back")
-                time.sleep(5)
-            else:
-                break
 
 
 d.watcher.when("O1CN012qVB9n1tvZ8ATEQGu_!!6000000005964-2-tps-144-144").click()
-d.watcher.when("//android.app.Dialog//android.widget.Button[@text='关闭']").click()
+d.watcher.when(xpath="//android.app.Dialog//android.widget.Button[@text='关闭']").click()
+d.watcher.when(xpath="//android.widget.Button[@text='关闭']").click()
+d.watcher.when("关闭").click()
+d.watcher.when(xpath="//android.widget.TextView[@package='com.eg.android.AlipayGphone']").click()
 close_btn = d(className="android.widget.ImageView", description="关闭按钮")
 if close_btn.exists:
     close_btn.click()
@@ -64,45 +68,50 @@ if task_btn.exists(timeout=10):
     left, bottom, right = task_btn.info['bounds']['left'], task_btn.info['bounds']['bottom'], task_btn.info['bounds']['right']
     d.click((right - left) // 2, bottom - 10)
     time.sleep(2)
-
     sign_btn = d(text="签到")
     if sign_btn.exists:
         sign_btn.click()
         time.sleep(2)
     list_view = d(className="android.widget.ListView", instance=0)
     if list_view.exists:
+        print(list_view.child_by_text("去完成", allow_scroll_search=True, className="android.widget.Button"))
         unclick_btn = []
         is_end = False
         while True:
             to_btn = d(className="android.widget.Button", text="去完成")
             if to_btn.exists:
-                if is_end:
-                    if len(unclick_btn) > 0 and to_btn.count <= len(unclick_btn):
-                        break
-                else:
-                    if len(unclick_btn) > 0 and to_btn.count <= len(unclick_btn):
-                        d.long_click(200, screen_height-30)
-                        time.sleep(2)
-                        d(scrollable=True).fling.toEnd()
-                        is_end = True
-                        continue
-                for view in to_btn:
+                need_click_view = None
+                need_click_index = 0
+                for index, view in enumerate(to_btn):
                     text_div = view.sibling(className="android.view.View", instance=0).child(className="android.widget.TextView", instance=0)
                     if text_div.exists:
                         if check_chars_exist(["拉好友", "点淘", "支付宝", "抢红包"], text_div.get_text()):
                             if view not in unclick_btn:
                                 unclick_btn.append(view)
                             continue
-                    view.click()
+                    need_click_index = index
+                    need_click_view = view
+                    break
+                if need_click_view:
+                    print("点击按钮", not need_click_view.get_text())
+                    need_click_view.click()
+                    time.sleep(2)
                     search_view = d(className="android.view.View", text="搜索有福利")
                     if search_view.exists:
                         d(className="android.widget.EditText", instance=0).send_keys("笔记本电脑")
                         d(className="android.widget.Button", text="搜索").click()
+                        in_search = True
                         time.sleep(2)
                     web_view = d(className="android.webkit.WebView")
                     if web_view.exists(timeout=5):
                         operate_task()
+                else:
+                    if not is_end:
+                        d.swipe_ext(Direction.FORWARD)
+                        is_end = True
+                    else:
+                        break
             else:
                 break
-            time.sleep(2)
+            time.sleep(6)
 d.watcher.remove()
