@@ -62,6 +62,7 @@ coin_btn = d(className="android.widget.FrameLayout", description="金币双11", 
 if coin_btn.exists(timeout=3):
     coin_btn.click()
     time.sleep(2)
+d.watch_context().wait_stable()
 # task_btn = d.xpath('//android.widget.TextView[@text="做任务攒钱"]')
 task_btn = d(resourceId="eva-canvas")
 if task_btn.exists(timeout=10):
@@ -74,7 +75,6 @@ if task_btn.exists(timeout=10):
         time.sleep(2)
     list_view = d(className="android.widget.ListView", instance=0)
     if list_view.exists:
-        print(list_view.child_by_text("去完成", allow_scroll_search=True, className="android.widget.Button"))
         unclick_btn = []
         is_end = False
         while True:
@@ -114,4 +114,6 @@ if task_btn.exists(timeout=10):
             else:
                 break
             time.sleep(6)
+else:
+    print("未找到做任务按钮")
 d.watcher.remove()
