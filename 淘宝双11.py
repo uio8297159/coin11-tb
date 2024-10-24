@@ -85,7 +85,7 @@ if task_btn.exists(timeout=10):
                 for index, view in enumerate(to_btn):
                     text_div = view.sibling(className="android.view.View", instance=0).child(className="android.widget.TextView", instance=0)
                     if text_div.exists:
-                        if check_chars_exist(["拉好友", "点淘", "支付宝", "抢红包"], text_div.get_text()):
+                        if check_chars_exist(["拉好友", "农场", "快手", "点淘", "支付宝", "抢红包"], text_div.get_text()):
                             if view not in unclick_btn:
                                 unclick_btn.append(view)
                             continue
