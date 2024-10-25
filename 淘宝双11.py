@@ -64,7 +64,16 @@ if coin_btn.exists(timeout=3):
     time.sleep(2)
 d.watch_context().wait_stable()
 # task_btn = d.xpath('//android.widget.TextView[@text="做任务攒钱"]')
+while True:
+    time.sleep(2)
+    underway_btn = d(text="进行中")
+    if underway_btn.exists:
+        continue
+    task_btn = d(text="做任务攒钱")
+    if task_btn.exists:
+        break
 task_btn = d(resourceId="eva-canvas")
+error_count = 0
 if task_btn.exists(timeout=10):
     left, bottom, right = task_btn.info['bounds']['left'], task_btn.info['bounds']['bottom'], task_btn.info['bounds']['right']
     d.click((right - left) // 2, bottom - 10)
@@ -85,15 +94,15 @@ if task_btn.exists(timeout=10):
                 for index, view in enumerate(to_btn):
                     text_div = view.sibling(className="android.view.View", instance=0).child(className="android.widget.TextView", instance=0)
                     if text_div.exists:
-                        if check_chars_exist(["拉好友", "农场", "快手", "点淘", "支付宝", "抢红包"], text_div.get_text()):
+                        if check_chars_exist(["拉好友", "农场", "快手", "点淘", "支付宝", "抢红包", "闲鱼"], text_div.get_text()):
                             if view not in unclick_btn:
                                 unclick_btn.append(view)
                             continue
-                    need_click_index = index
-                    need_click_view = view
-                    break
+                        need_click_index = index
+                        need_click_view = view
+                        break
                 if need_click_view:
-                    print("点击按钮", not need_click_view.get_text())
+                    print("点击按钮", need_click_view.get_text())
                     need_click_view.click()
                     time.sleep(2)
                     search_view = d(className="android.view.View", text="搜索有福利")
@@ -110,7 +119,10 @@ if task_btn.exists(timeout=10):
                         d.swipe_ext(Direction.FORWARD)
                         is_end = True
                     else:
-                        break
+                        error_count += 1
+                        print("未找到可点击按钮", error_count)
+                        if error_count > 6:
+                            break
             else:
                 break
             time.sleep(6)
