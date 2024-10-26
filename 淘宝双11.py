@@ -91,18 +91,20 @@ if task_btn.exists(timeout=10):
             if to_btn.exists:
                 need_click_view = None
                 need_click_index = 0
+                task_name = None
                 for index, view in enumerate(to_btn):
                     text_div = view.sibling(className="android.view.View", instance=0).child(className="android.widget.TextView", instance=0)
                     if text_div.exists:
-                        if check_chars_exist(["拉好友", "农场", "快手", "点淘", "支付宝", "抢红包", "闲鱼"], text_div.get_text()):
+                        if check_chars_exist(["拉好友", "农场", "快手", "点淘", "支付宝", "抢红包", "闲鱼", "蚂蚁"], text_div.get_text()):
                             if view not in unclick_btn:
                                 unclick_btn.append(view)
                             continue
+                        task_name = text_div.get_text()
                         need_click_index = index
                         need_click_view = view
                         break
                 if need_click_view:
-                    print("点击按钮", need_click_view.get_text())
+                    print("点击按钮", task_name)
                     need_click_view.click()
                     time.sleep(2)
                     search_view = d(className="android.view.View", text="搜索有福利")
