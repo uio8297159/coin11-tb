@@ -52,9 +52,10 @@ def operate_task():
 
 d.watcher.when("O1CN012qVB9n1tvZ8ATEQGu_!!6000000005964-2-tps-144-144").click()
 d.watcher.when(xpath="//android.app.Dialog//android.widget.Button[@text='关闭']").click()
-d.watcher.when(xpath="//android.widget.Button[@text='关闭']").click()
-d.watcher.when("关闭").click()
+# d.watcher.when(xpath="//android.widget.Button[@text='关闭']").click()
+# d.watcher.when("关闭").click()
 d.watcher.when(xpath="//android.widget.TextView[@package='com.eg.android.AlipayGphone']").click()
+d.watcher.start()
 close_btn = d(className="android.widget.ImageView", description="关闭按钮")
 if close_btn.exists:
     close_btn.click()
@@ -72,11 +73,11 @@ while True:
     task_btn = d(text="做任务攒钱")
     if task_btn.exists:
         break
-task_btn = d(resourceId="eva-canvas")
+# task_btn = d(resourceId="eva-canvas")
 error_count = 0
-if task_btn.exists(timeout=10):
-    left, bottom, right = task_btn.info['bounds']['left'], task_btn.info['bounds']['bottom'], task_btn.info['bounds']['right']
-    d.click((right - left) // 2, bottom - 10)
+if task_btn.click_exists(timeout=10):
+    # left, bottom, right = task_btn.info['bounds']['left'], task_btn.info['bounds']['bottom'], task_btn.info['bounds']['right']
+    # d.click((right - left) // 2, bottom - 10)
     time.sleep(2)
     sign_btn = d(text="签到")
     if sign_btn.exists:
@@ -130,4 +131,5 @@ if task_btn.exists(timeout=10):
             time.sleep(6)
 else:
     print("未找到做任务按钮")
+d.watcher.stop()
 d.watcher.remove()
