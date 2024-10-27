@@ -120,6 +120,7 @@ if task_btn.click_exists(timeout=10):
                 else:
                     if not is_end:
                         d.swipe_ext(Direction.FORWARD)
+                        d(scrollable=True).scroll.toEnd()
                         is_end = True
                     else:
                         error_count += 1
