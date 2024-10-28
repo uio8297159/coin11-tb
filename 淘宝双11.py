@@ -1,5 +1,4 @@
 import time
-from asyncio import timeout
 
 import uiautomator2 as u2
 from uiautomator2 import Direction
