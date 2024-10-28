@@ -52,9 +52,10 @@ def operate_task():
 
 d.watcher.when("O1CN012qVB9n1tvZ8ATEQGu_!!6000000005964-2-tps-144-144").click()
 d.watcher.when(xpath="//android.app.Dialog//android.widget.Button[@text='关闭']").click()
-d.watcher.when(xpath="//android.widget.Button[@text='关闭']").click()
-d.watcher.when("关闭").click()
+# d.watcher.when(xpath="//android.widget.Button[@text='关闭']").click()
+# d.watcher.when("关闭").click()
 d.watcher.when(xpath="//android.widget.TextView[@package='com.eg.android.AlipayGphone']").click()
+d.watcher.start()
 close_btn = d(className="android.widget.ImageView", description="关闭按钮")
 if close_btn.exists:
     close_btn.click()
@@ -64,10 +65,19 @@ if coin_btn.exists(timeout=3):
     time.sleep(2)
 d.watch_context().wait_stable()
 # task_btn = d.xpath('//android.widget.TextView[@text="做任务攒钱"]')
-task_btn = d(resourceId="eva-canvas")
-if task_btn.exists(timeout=10):
-    left, bottom, right = task_btn.info['bounds']['left'], task_btn.info['bounds']['bottom'], task_btn.info['bounds']['right']
-    d.click((right - left) // 2, bottom - 10)
+while True:
+    time.sleep(2)
+    underway_btn = d(text="进行中")
+    if underway_btn.exists:
+        continue
+    task_btn = d(text="做任务攒钱")
+    if task_btn.exists:
+        break
+# task_btn = d(resourceId="eva-canvas")
+error_count = 0
+if task_btn.click_exists(timeout=10):
+    # left, bottom, right = task_btn.info['bounds']['left'], task_btn.info['bounds']['bottom'], task_btn.info['bounds']['right']
+    # d.click((right - left) // 2, bottom - 10)
     time.sleep(2)
     sign_btn = d(text="签到")
     if sign_btn.exists:
@@ -82,18 +92,20 @@ if task_btn.exists(timeout=10):
             if to_btn.exists:
                 need_click_view = None
                 need_click_index = 0
+                task_name = None
                 for index, view in enumerate(to_btn):
                     text_div = view.sibling(className="android.view.View", instance=0).child(className="android.widget.TextView", instance=0)
                     if text_div.exists:
-                        if check_chars_exist(["拉好友", "农场", "快手", "点淘", "支付宝", "抢红包"], text_div.get_text()):
+                        if check_chars_exist(["拉好友", "农场", "快手", "点淘", "支付宝", "抢红包", "闲鱼", "蚂蚁"], text_div.get_text()):
                             if view not in unclick_btn:
                                 unclick_btn.append(view)
                             continue
-                    need_click_index = index
-                    need_click_view = view
-                    break
+                        task_name = text_div.get_text()
+                        need_click_index = index
+                        need_click_view = view
+                        break
                 if need_click_view:
-                    print("点击按钮", not need_click_view.get_text())
+                    print("点击按钮", task_name)
                     need_click_view.click()
                     time.sleep(2)
                     search_view = d(className="android.view.View", text="搜索有福利")
@@ -108,12 +120,17 @@ if task_btn.exists(timeout=10):
                 else:
                     if not is_end:
                         d.swipe_ext(Direction.FORWARD)
+                        d(scrollable=True).scroll.toEnd()
                         is_end = True
                     else:
-                        break
+                        error_count += 1
+                        print("未找到可点击按钮", error_count)
+                        if error_count > 6:
+                            break
             else:
                 break
             time.sleep(6)
 else:
     print("未找到做任务按钮")
+d.watcher.stop()
 d.watcher.remove()
