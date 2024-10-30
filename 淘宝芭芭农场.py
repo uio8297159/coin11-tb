@@ -2,7 +2,7 @@ import time
 
 import uiautomator2 as u2
 from uiautomator2 import Direction
-from utils import check_chars_exist, no_tasks
+from utils import check_chars_exist
 
 in_search = False
 unclick_btn = []
@@ -72,7 +72,7 @@ while True:
         for index, view in enumerate(to_btn):
             text_div = view.sibling(className="android.view.View", instance=0).child(className="android.widget.TextView", instance=0)
             if text_div.exists:
-                if check_chars_exist(no_tasks, text_div.get_text()):
+                if check_chars_exist(text_div.get_text()):
                     if view not in unclick_btn:
                         unclick_btn.append(view)
                     continue

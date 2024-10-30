@@ -2,6 +2,7 @@ import time
 
 import uiautomator2 as u2
 from uiautomator2 import Direction
+from utils import check_chars_exist
 
 d = u2.connect()
 d.app_start("com.taobao.taobao", stop=True)
@@ -13,13 +14,6 @@ in_search = False
 
 def check_close():
     d(className="android.widget.Button", text="关闭")
-
-
-def check_chars_exist(arr, text):
-    for char in arr:
-        if char in text:
-            return True
-    return False
 
 
 def operate_task():
@@ -50,6 +44,7 @@ def operate_task():
 
 
 d.watcher.when("O1CN012qVB9n1tvZ8ATEQGu_!!6000000005964-2-tps-144-144").click()
+d.watcher.when("O1CN01TkBa3v1zgLfbNmfp7_!!6000000006743-2-tps-72-72").click()
 d.watcher.when(xpath="//android.app.Dialog//android.widget.Button[@text='关闭']").click()
 # d.watcher.when(xpath="//android.widget.Button[@text='关闭']").click()
 # d.watcher.when("关闭").click()
@@ -58,6 +53,7 @@ d.watcher.start()
 close_btn = d(className="android.widget.ImageView", description="关闭按钮")
 if close_btn.exists:
     close_btn.click()
+d.watch_context().wait_stable()
 coin_btn = d(className="android.widget.FrameLayout", description="金币双11", instance=0)
 if coin_btn.exists(timeout=3):
     coin_btn.click()
@@ -95,7 +91,7 @@ if task_btn.click_exists(timeout=10):
                 for index, view in enumerate(to_btn):
                     text_div = view.sibling(className="android.view.View", instance=0).child(className="android.widget.TextView", instance=0)
                     if text_div.exists:
-                        if check_chars_exist(["拉好友", "农场", "快手", "点淘", "支付宝", "抢红包", "闲鱼", "蚂蚁"], text_div.get_text()):
+                        if check_chars_exist(text_div.get_text()):
                             if view not in unclick_btn:
                                 unclick_btn.append(view)
                             continue
