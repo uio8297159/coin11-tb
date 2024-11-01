@@ -5,7 +5,8 @@ from uiautomator2 import Direction
 from utils import check_chars_exist, other_app
 
 d = u2.connect()
-d.app_start("com.taobao.taobao", stop=True)
+d.app_start("com.taobao.taobao", stop=True, use_monkey=True)
+# d.debug = True
 screen_width = d.info['displayWidth']
 screen_height = d.info['displayHeight']
 time.sleep(2)
