@@ -12,6 +12,7 @@ screen_height = d.info['displayHeight']
 time.sleep(2)
 in_search = False
 in_other_app = False
+have_clicked = []
 
 
 def check_close():
@@ -33,16 +34,8 @@ def operate_task():
             time.sleep(5)
     elif in_other_app:
         time.sleep(10)
-        close_btn = d(description="关闭", packageName="com.eg.android.AlipayGphone", className="android.widget.FrameLayout", clickable=True, index=2)
-        if close_btn.exists:
-            close_btn.click()
-        while True:
-            d.press("back")
-            time.sleep(1)
-            package_name = d.app_current()["package"]
-            print(package_name)
-            if package_name == "com.taobao.taobao":
-                break
+        print("当前包名: ", d.app_current()["package"])
+        d.app_stop(d.app_current()["package"])
         in_other_app = False
     else:
         while True:
@@ -107,7 +100,6 @@ if task_btn.click_exists(timeout=10):
     is_end = False
     while True:
         to_btn = d(className="android.widget.Button", text="去完成")
-        print(to_btn.count)
         if to_btn.exists:
             need_click_view = None
             need_click_index = 0
@@ -120,11 +112,15 @@ if task_btn.click_exists(timeout=10):
                             unclick_btn.append(view)
                         continue
                     task_name = text_div.get_text()
+                    if task_name in have_clicked:
+                        continue
                     need_click_index = index
                     need_click_view = view
                     break
             if need_click_view:
                 print("点击按钮", task_name)
+                if task_name not in have_clicked:
+                    have_clicked.append(task_name)
                 need_click_view.click()
                 time.sleep(2)
                 search_view = d(className="android.view.View", text="搜索有福利")
@@ -135,9 +131,11 @@ if task_btn.click_exists(timeout=10):
                     time.sleep(2)
                 if check_chars_exist(task_name, other_app):
                     in_other_app = True
-                web_view = d(className="android.webkit.WebView")
-                if web_view.exists(timeout=5):
                     operate_task()
+                else:
+                    web_view = d(className="android.webkit.WebView")
+                    if web_view.exists(timeout=5):
+                        operate_task()
             else:
                 if not is_end:
                     d.swipe_ext(Direction.FORWARD)
@@ -154,6 +152,13 @@ if task_btn.click_exists(timeout=10):
         time.sleep(6)
 else:
     print("未找到做任务按钮")
+draw_down_btn = d(className="android.widget.Button", text="立即领取")
+while True:
+    if draw_down_btn.exists:
+        draw_down_btn.click()
+        time.sleep(2)
+    else:
+        break
 ctx.stop()
 ctx.close()
 d.watcher.remove()
