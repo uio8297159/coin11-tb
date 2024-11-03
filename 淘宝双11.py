@@ -87,7 +87,7 @@ if task_btn.click_exists(timeout=10):
     print("点击了做任务攒钱按钮")
     # left, bottom, right = task_btn.info['bounds']['left'], task_btn.info['bounds']['bottom'], task_btn.info['bounds']['right']
     # d.click((right - left) // 2, bottom - 10)
-    time.sleep(5)
+    time.sleep(8)
     sign_btn = d(text="签到")
     if sign_btn.exists:
         sign_btn.click()
