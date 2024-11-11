@@ -1,13 +1,13 @@
 import time
-from pydoc import classname
 
 import uiautomator2 as u2
-from dulwich.porcelain import describe
 from uiautomator2 import Direction
 from utils import check_chars_exist
 
+is_first = True
 in_search = False
 unclick_btn = []
+have_clicked = []
 is_end = False
 error_count = 0
 in_other_app = False
@@ -89,6 +89,13 @@ else:
 print("点击开始做任务")
 while True:
     time.sleep(4)
+    if is_first:
+        click_btn = d(className="android.widget.Button", text="点击得")
+        if click_btn.exists(timeout=4):
+            click_btn.click()
+            is_first = False
+            print("点击任务到访得金币")
+            time.sleep(4)
     get_btn = d(className="android.widget.Button", text="领取奖励")
     if get_btn.exists:
         get_btn.click()
@@ -110,11 +117,15 @@ while True:
                         unclick_btn.append(view)
                     continue
                 task_name = text_div.get_text()
+                if task_name in have_clicked:
+                    continue
                 need_click_index = index
                 need_click_view = view
                 break
         if need_click_view:
             print("点击按钮", task_name)
+            if task_name not in have_clicked:
+                have_clicked.append(task_name)
             need_click_view.click()
             time.sleep(2)
             search_view = d(className="android.view.View", text="搜索有福利")
