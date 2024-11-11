@@ -70,10 +70,23 @@ time.sleep(5)
 #     home_btn.click()
 #     print("点击首页来访")
 #     time.sleep(3)
+receive_btn = d(className="android.widget.Button", textContains="收货奖励")
+if receive_btn.exists(timeout=4):
+    receive_btn.click()
+    print("点击收货奖励")
+    time.sleep(3)
 earn_btn = d(className="android.widget.TextView", textContains="赚更多金币")
 if earn_btn.exists(timeout=4):
     earn_btn.click()
-    print("点击赚更多金币")
+    time.sleep(3)
+else:
+    earn_btn = d(className="android.widget.TextView", textContains="签到领金币")
+    if earn_btn.exists(timeout=4):
+        earn_btn.click()
+        time.sleep(3)
+    else:
+        raise Exception("没有找到金币任务按钮")
+print("点击开始做任务")
 while True:
     time.sleep(4)
     get_btn = d(className="android.widget.Button", text="领取奖励")
