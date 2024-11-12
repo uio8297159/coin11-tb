@@ -101,10 +101,7 @@ while True:
         get_btn.click()
         print("点击领取奖励")
         time.sleep(4)
-    to_btn = d(className="android.widget.Button", text="去完成")
-    print("查找去完成按钮")
-    if not to_btn.exists(timeout=5):
-        to_btn = d(className="android.widget.Button", text="去逛逛")
+    to_btn = d(className="android.widget.Button", textMatches="去完成|去逛逛|去浏览")
     if to_btn.exists:
         need_click_view = None
         need_click_index = 0

@@ -64,7 +64,7 @@ if sign_btn.exists:
     sign_btn.click()
     time.sleep(2)
 while True:
-    to_btn = d(className="android.widget.Button", text="去完成")
+    to_btn = d(className="android.widget.Button", textMatches="去完成|去浏览")
     if to_btn.exists:
         need_click_view = None
         need_click_index = 0
