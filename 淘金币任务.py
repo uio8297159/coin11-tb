@@ -4,7 +4,6 @@ import uiautomator2 as u2
 from uiautomator2 import Direction
 from utils import check_chars_exist
 
-is_first = True
 in_search = False
 unclick_btn = []
 have_clicked = []
@@ -70,38 +69,35 @@ time.sleep(5)
 #     home_btn.click()
 #     print("点击首页来访")
 #     time.sleep(3)
+sign_btn = d(className="android.widget.Button", text="今日签到")
+if sign_btn.exists:
+    sign_btn.click()
+    print("点击今日签到")
+    time.sleep(4)
 receive_btn = d(className="android.widget.Button", textContains="收货奖励")
 if receive_btn.exists(timeout=4):
     receive_btn.click()
     print("点击收货奖励")
+    time.sleep(3)
+earn_btn = d(className="android.widget.TextView", textContains="签到领金币")
+if earn_btn.exists(timeout=4):
+    earn_btn.click()
     time.sleep(3)
 earn_btn = d(className="android.widget.TextView", textContains="赚更多金币")
 if earn_btn.exists(timeout=4):
     earn_btn.click()
     time.sleep(3)
 else:
-    earn_btn = d(className="android.widget.TextView", textContains="签到领金币")
-    if earn_btn.exists(timeout=4):
-        earn_btn.click()
-        time.sleep(3)
-    else:
-        raise Exception("没有找到金币任务按钮")
+    raise Exception("没有找到金币任务按钮")
 print("点击开始做任务")
 while True:
     time.sleep(4)
-    if is_first:
-        click_btn = d(className="android.widget.Button", text="点击得")
-        if click_btn.exists(timeout=4):
-            click_btn.click()
-            is_first = False
-            print("点击任务到访得金币")
-            time.sleep(4)
     get_btn = d(className="android.widget.Button", text="领取奖励")
     if get_btn.exists:
         get_btn.click()
         print("点击领取奖励")
         time.sleep(4)
-    to_btn = d(className="android.widget.Button", textMatches="去完成|去逛逛|去浏览")
+    to_btn = d(className="android.widget.Button", textMatches="去完成|去逛逛|去浏览|点击得|逛一逛")
     if to_btn.exists:
         need_click_view = None
         need_click_index = 0
