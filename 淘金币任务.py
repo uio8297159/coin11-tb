@@ -12,6 +12,11 @@ error_count = 0
 in_other_app = False
 d = u2.connect()
 d.app_start("com.taobao.taobao", stop=True)
+ctx = d.watch_context()
+ctx.when("O1CN012qVB9n1tvZ8ATEQGu_!!6000000005964-2-tps-144-144").click()
+ctx.when(xpath="//android.app.Dialog//android.widget.Button[@text='关闭']").click()
+ctx.when(xpath="//android.widget.TextView[@package='com.eg.android.AlipayGphone']").click()
+ctx.start()
 time.sleep(5)
 
 
@@ -55,20 +60,22 @@ def operate_task():
             d.press("back")
 
 
-d.watcher.when("O1CN012qVB9n1tvZ8ATEQGu_!!6000000005964-2-tps-144-144").click()
-d.watcher.when(xpath="//android.app.Dialog//android.widget.Button[@text='关闭']").click()
-d.watcher.when(xpath="//android.widget.TextView[@package='com.eg.android.AlipayGphone']").click()
-d.watcher.start()
-d(className="android.view.View", description="搜索栏").click()
-d(resourceId="com.taobao.taobao:id/searchEdit").send_keys("淘金币")
-time.sleep(3)
-d(className="android.view.View", descriptionContains="淘金币").click()
-time.sleep(5)
-# home_btn = d(className="android.widget.Button", textContains="首页来访")
-# if home_btn.exists(timeout=4):
-#     home_btn.click()
-#     print("点击首页来访")
-#     time.sleep(3)
+ctx.wait_stable()
+coin_btn = d(className="android.widget.FrameLayout", description="领淘金币", clickable=True)
+if coin_btn.exists(timeout=10):
+    coin_btn.click()
+    time.sleep(5)
+    home_btn = d(className="android.widget.Button", textContains="首页来访")
+    if home_btn.exists(timeout=4):
+        home_btn.click()
+        print("点击首页来访")
+        time.sleep(3)
+else:
+    d(className="android.view.View", description="搜索栏").click()
+    d(resourceId="com.taobao.taobao:id/searchEdit").send_keys("淘金币")
+    time.sleep(3)
+    d(className="android.view.View", descriptionContains="淘金币").click()
+    time.sleep(5)
 sign_btn = d(className="android.widget.Button", text="今日签到")
 if sign_btn.exists:
     sign_btn.click()
@@ -97,7 +104,13 @@ while True:
         get_btn.click()
         print("点击领取奖励")
         time.sleep(4)
-    to_btn = d(className="android.widget.Button", textMatches="去完成|去逛逛|去浏览|点击得|逛一逛")
+    de_btn = d(className="android.widget.Button", text="点击得")
+    if de_btn.exists:
+        de_btn.click()
+        print("点击点击得")
+        time.sleep(4)
+        continue
+    to_btn = d(className="android.widget.Button", textMatches="去完成|去逛逛|去浏览|逛一逛")
     if to_btn.exists:
         need_click_view = None
         need_click_index = 0
