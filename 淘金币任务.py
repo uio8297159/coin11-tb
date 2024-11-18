@@ -65,31 +65,21 @@ coin_btn = d(className="android.widget.FrameLayout", description="领淘金币",
 if coin_btn.exists(timeout=10):
     coin_btn.click()
     time.sleep(5)
-    home_btn = d(className="android.widget.Button", textContains="首页来访")
-    if home_btn.exists(timeout=4):
-        home_btn.click()
-        print("点击首页来访")
-        time.sleep(3)
+    # home_btn = d(className="android.widget.Button", textContains="首页来访")
+    # if home_btn.exists(timeout=4):
+    #     home_btn.click()
+    #     print("点击首页来访")
+    #     time.sleep(3)
 else:
     d(className="android.view.View", description="搜索栏").click()
     d(resourceId="com.taobao.taobao:id/searchEdit").send_keys("淘金币")
     time.sleep(3)
     d(className="android.view.View", descriptionContains="淘金币").click()
     time.sleep(5)
-sign_btn = d(className="android.widget.Button", text="今日签到")
-if sign_btn.exists:
-    sign_btn.click()
-    print("点击今日签到")
-    time.sleep(4)
-receive_btn = d(className="android.widget.Button", textContains="收货奖励")
-if receive_btn.exists(timeout=4):
-    receive_btn.click()
-    print("点击收货奖励")
-    time.sleep(3)
 earn_btn = d(className="android.widget.TextView", textContains="签到领金币")
 if earn_btn.exists(timeout=4):
     earn_btn.click()
-    time.sleep(3)
+    time.sleep(5)
 earn_btn = d(className="android.widget.TextView", textContains="赚更多金币")
 if earn_btn.exists(timeout=4):
     earn_btn.click()
@@ -99,6 +89,7 @@ else:
 print("点击开始做任务")
 while True:
     time.sleep(4)
+    print("开始查找按钮。。。")
     get_btn = d(className="android.widget.Button", text="领取奖励")
     if get_btn.exists:
         get_btn.click()
