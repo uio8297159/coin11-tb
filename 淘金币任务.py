@@ -11,6 +11,8 @@ is_end = False
 error_count = 0
 in_other_app = False
 d = u2.connect()
+d.shell("adb kill-server && adb start-server")
+time.sleep(5)
 d.app_start("com.taobao.taobao", stop=True)
 ctx = d.watch_context()
 ctx.when("O1CN012qVB9n1tvZ8ATEQGu_!!6000000005964-2-tps-144-144").click()
@@ -25,25 +27,18 @@ def operate_task():
     start_time = time.time()
     taolive_btn = d(resourceId="com.taobao.taobao:id/taolive_close_btn")
     close_btn = d(resourceId="com.taobao.taobao.liveroom_android_plugin_AType:id/taolive_room_top_close_btn")
-    if taolive_btn.exists:
-        time.sleep(20)
+    # com.taobao.taobao.liveroom_android_plugin_AType:id/taolive_room_top_close_btn
+    if taolive_btn.exists or close_btn.exists:
+        time.sleep(15)
         while True:
-            taolive_btn = d(resourceId="com.taobao.taobao:id/taolive_close_btn")
-            if not taolive_btn.exists:
-                break
-            d.press("back")
-            time.sleep(5)
-    elif close_btn.exists:
-        time.sleep(20)
-        while True:
-            close_btn = d(resourceId="com.taobao.taobao.liveroom_android_plugin_AType:id/taolive_room_top_close_btn")
-            if not close_btn.exists:
+            home_view = d(className="android.widget.Image", text="做任务赚金币")
+            if home_view.exists:
                 break
             d.press("back")
             time.sleep(5)
     else:
         while True:
-            if time.time() - start_time > 20:
+            if time.time() - start_time > 15:
                 break
             d.swipe_ext(Direction.FORWARD)
             time.sleep(3)

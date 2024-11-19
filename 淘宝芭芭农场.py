@@ -15,17 +15,19 @@ def operate_task():
     global in_search
     start_time = time.time()
     taolive_btn = d(resourceId="com.taobao.taobao:id/taolive_close_btn")
-    if taolive_btn.exists:
-        time.sleep(20)
+    close_btn = d(resourceId="com.taobao.taobao.liveroom_android_plugin_AType:id/taolive_room_top_close_btn")
+    # com.taobao.taobao.liveroom_android_plugin_AType:id/taolive_room_top_close_btn
+    if taolive_btn.exists or close_btn.exists:
+        time.sleep(15)
         while True:
-            taolive_btn = d(resourceId="com.taobao.taobao:id/taolive_close_btn")
-            if not taolive_btn.exists:
+            home_view = d(className="android.widget.Image", text="做任务赚金币")
+            if home_view.exists:
                 break
             d.press("back")
             time.sleep(5)
     else:
         while True:
-            if time.time() - start_time > 20:
+            if time.time() - start_time > 15:
                 break
             d.swipe_ext(Direction.FORWARD)
             time.sleep(3)
@@ -43,8 +45,10 @@ def operate_task():
 
 
 d = u2.connect()
+d.shell("adb kill-server && adb start-server")
+time.sleep(5)
 d.app_start("com.taobao.taobao", stop=True)
-time.sleep(2)
+time.sleep(5)
 
 d.watcher.when("O1CN012qVB9n1tvZ8ATEQGu_!!6000000005964-2-tps-144-144").click()
 d.watcher.when(xpath="//android.app.Dialog//android.widget.Button[@text='关闭']").click()
