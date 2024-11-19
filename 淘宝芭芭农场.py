@@ -47,6 +47,9 @@ def operate_task():
 d = u2.connect()
 d.shell("adb kill-server && adb start-server")
 time.sleep(5)
+d.app_stop("com.taobao.taobao")
+d.app_clear('com.taobao.taobao')
+time.sleep(2)
 d.app_start("com.taobao.taobao", stop=True)
 time.sleep(5)
 
