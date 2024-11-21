@@ -1,3 +1,4 @@
+import time
 
 
 def check_chars_exist(text, chars=None):

@@ -34,11 +34,18 @@ def operate_task():
     if taolive_btn.exists or close_btn.exists:
         time.sleep(15)
         while True:
+            taolive_btn = d(resourceId="com.taobao.taobao:id/taolive_close_btn", clickable=True)
+            close_btn = d(resourceId="com.taobao.taobao.liveroom_android_plugin_AType:id/taolive_room_top_close_btn", clickable=True)
+            if taolive_btn.exists:
+                taolive_btn.click()
+            elif close_btn.exists:
+                close_btn.click()
+            else:
+                d.press("back")
+            time.sleep(5)
             home_view = d(className="android.widget.Image", text="做任务赚金币")
             if home_view.exists:
                 break
-            d.press("back")
-            time.sleep(5)
     else:
         while True:
             if time.time() - start_time > 15:
