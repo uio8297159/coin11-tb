@@ -6,6 +6,7 @@ from utils import check_chars_exist
 
 in_search = False
 unclick_btn = []
+have_clicked = []
 is_end = False
 error_count = 0
 in_other_app = False
@@ -61,6 +62,7 @@ d.app_start("com.taobao.taobao", stop=True)
 time.sleep(5)
 
 d.watcher.when("O1CN012qVB9n1tvZ8ATEQGu_!!6000000005964-2-tps-144-144").click()
+d.watcher.when(xpath="//android.app.Dialog//android.widget.Button[contains(text(), '-tps-')]").click()
 d.watcher.when(xpath="//android.app.Dialog//android.widget.Button[@text='关闭']").click()
 d.watcher.when(xpath="//android.widget.TextView[@package='com.eg.android.AlipayGphone']").click()
 d.watcher.start()
@@ -91,11 +93,15 @@ while True:
                         unclick_btn.append(view)
                     continue
                 task_name = text_div.get_text()
+                if task_name in have_clicked:
+                    continue
                 need_click_index = index
                 need_click_view = view
                 break
         if need_click_view:
             print("点击按钮", task_name)
+            if task_name not in have_clicked:
+                have_clicked.append(task_name)
             need_click_view.click()
             time.sleep(2)
             search_view = d(className="android.view.View", text="搜索有福利")
