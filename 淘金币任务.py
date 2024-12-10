@@ -14,7 +14,7 @@ d = u2.connect()
 d.shell("adb kill-server && adb start-server")
 time.sleep(5)
 d.app_stop("com.taobao.taobao")
-d.app_clear('com.taobao.taobao')
+# d.app_clear('com.taobao.taobao')
 time.sleep(2)
 d.app_start("com.taobao.taobao", stop=True)
 ctx = d.watch_context()
@@ -39,8 +39,10 @@ def operate_task():
             close_btn = d(resourceId="com.taobao.taobao.liveroom_android_plugin_AType:id/taolive_room_top_close_btn", clickable=True)
             if taolive_btn.exists:
                 taolive_btn.click()
+                d.click(taolive_btn[0].center()[0], taolive_btn[0].center()[1])
             elif close_btn.exists:
                 close_btn.click()
+                d.click(close_btn[0].center()[0], close_btn[0].center()[1])
             else:
                 d.press("back")
             time.sleep(5)

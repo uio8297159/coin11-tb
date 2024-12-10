@@ -9,3 +9,8 @@ pip3 install uiautodev
 # 启动
 uiauto.dev
 ```
+
+adb命令，获取当前打开的app包名和类名
+```shell
+adb shell dumpsys window | grep mCurrentFocus
+```
