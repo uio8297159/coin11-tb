@@ -19,6 +19,7 @@ time.sleep(2)
 d.app_start("com.taobao.taobao", stop=True)
 ctx = d.watch_context()
 ctx.when("O1CN012qVB9n1tvZ8ATEQGu_!!6000000005964-2-tps-144-144").click()
+ctx.when("O1CN01sORayC1hBVsDQRZoO_!!6000000004239-2-tps-426-128.png_").click()
 ctx.when(xpath="//android.app.Dialog//android.widget.Button[contains(text(), '-tps-')]").click()
 ctx.when(xpath="//android.app.Dialog//android.widget.Button[@text='关闭']").click()
 ctx.when(xpath="//android.widget.TextView[@package='com.eg.android.AlipayGphone']").click()
@@ -31,12 +32,16 @@ def operate_task():
     start_time = time.time()
     taolive_btn = d(resourceId="com.taobao.taobao:id/taolive_close_btn")
     close_btn = d(resourceId="com.taobao.taobao.liveroom_android_plugin_AType:id/taolive_room_top_close_btn")
+    print("taolive_btn: ", taolive_btn.exists)
+    print("close_btn: ", close_btn.exists)
     # com.taobao.taobao.liveroom_android_plugin_AType:id/taolive_room_top_close_btn
     if taolive_btn.exists or close_btn.exists:
         time.sleep(15)
         while True:
             taolive_btn = d(resourceId="com.taobao.taobao:id/taolive_close_btn", clickable=True)
             close_btn = d(resourceId="com.taobao.taobao.liveroom_android_plugin_AType:id/taolive_room_top_close_btn", clickable=True)
+            print("taolive_btn: ", taolive_btn.exists)
+            print("close_btn: ", close_btn.exists)
             if taolive_btn.exists:
                 taolive_btn.click()
                 d.click(taolive_btn[0].center()[0], taolive_btn[0].center()[1])
