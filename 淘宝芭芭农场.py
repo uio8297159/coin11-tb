@@ -17,16 +17,20 @@ def operate_task():
     start_time = time.time()
     taolive_btn = d(resourceId="com.taobao.taobao:id/taolive_close_btn")
     close_btn = d(resourceId="com.taobao.taobao.liveroom_android_plugin_AType:id/taolive_room_top_close_btn")
+    farm_close_btn = d(resourceId="com.taobao.taobao:id/back_home_btn")
     # com.taobao.taobao.liveroom_android_plugin_AType:id/taolive_room_top_close_btn
-    if taolive_btn.exists or close_btn.exists:
+    if taolive_btn.exists or close_btn.exists or farm_close_btn.exists:
         time.sleep(15)
         while True:
             taolive_btn = d(resourceId="com.taobao.taobao:id/taolive_close_btn", clickable=True)
             close_btn = d(resourceId="com.taobao.taobao.liveroom_android_plugin_AType:id/taolive_room_top_close_btn", clickable=True)
+            farm_close_btn = d(resourceId="com.taobao.taobao:id/back_home_btn")
             if taolive_btn.exists:
                 taolive_btn.click()
             elif close_btn.exists:
                 close_btn.click()
+            elif farm_close_btn.exists:
+                farm_close_btn.click()
             else:
                 d.press("back")
             time.sleep(5)

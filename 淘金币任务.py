@@ -32,16 +32,12 @@ def operate_task():
     start_time = time.time()
     taolive_btn = d(resourceId="com.taobao.taobao:id/taolive_close_btn")
     close_btn = d(resourceId="com.taobao.taobao.liveroom_android_plugin_AType:id/taolive_room_top_close_btn")
-    print("taolive_btn: ", taolive_btn.exists)
-    print("close_btn: ", close_btn.exists)
     # com.taobao.taobao.liveroom_android_plugin_AType:id/taolive_room_top_close_btn
     if taolive_btn.exists or close_btn.exists:
         time.sleep(15)
         while True:
             taolive_btn = d(resourceId="com.taobao.taobao:id/taolive_close_btn", clickable=True)
             close_btn = d(resourceId="com.taobao.taobao.liveroom_android_plugin_AType:id/taolive_room_top_close_btn", clickable=True)
-            print("taolive_btn: ", taolive_btn.exists)
-            print("close_btn: ", close_btn.exists)
             if taolive_btn.exists:
                 taolive_btn.click()
                 d.click(taolive_btn[0].center()[0], taolive_btn[0].center()[1])
@@ -108,6 +104,7 @@ while True:
         get_btn.click()
         print("点击领取奖励")
         time.sleep(4)
+        continue
     de_btn = d(className="android.widget.Button", text="点击得")
     if de_btn.exists:
         de_btn.click()
@@ -122,11 +119,12 @@ while True:
         for index, view in enumerate(to_btn):
             text_div = view.sibling(className="android.view.View", instance=0).child(className="android.widget.TextView", instance=0)
             if text_div.exists:
-                if check_chars_exist(text_div.get_text()):
+                task_name = text_div.get_text()
+                print(task_name)
+                if check_chars_exist(task_name):
                     if view not in unclick_btn:
                         unclick_btn.append(view)
                     continue
-                task_name = text_div.get_text()
                 if task_name in have_clicked:
                     continue
                 need_click_index = index
@@ -137,6 +135,8 @@ while True:
             if task_name not in have_clicked:
                 have_clicked.append(task_name)
             need_click_view.click()
+            if "逛直播间" in task_name:
+                breakpoint()
             time.sleep(2)
             search_view = d(className="android.view.View", text="搜索有福利")
             if search_view.exists:
@@ -145,7 +145,8 @@ while True:
                 in_search = True
                 time.sleep(2)
             web_view = d(className="android.webkit.WebView")
-            if web_view.exists(timeout=5):
+            live_view = d(resourceId="com.taobao.taobao:id/layermanager_penetrate_webview_container_id")
+            if web_view.exists(timeout=5) or live_view.exists(timeout=5):
                 operate_task()
         else:
             if not is_end:
