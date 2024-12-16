@@ -135,8 +135,6 @@ while True:
             if task_name not in have_clicked:
                 have_clicked.append(task_name)
             need_click_view.click()
-            if "逛直播间" in task_name:
-                breakpoint()
             time.sleep(2)
             search_view = d(className="android.view.View", text="搜索有福利")
             if search_view.exists:
