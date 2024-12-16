@@ -11,6 +11,10 @@ is_end = False
 error_count = 0
 in_other_app = False
 d = u2.connect()
+d.shell("adb kill-server && adb start-server")
+time.sleep(5)
+d.app_stop("com.eg.android.AlipayGphone")
+time.sleep(2)
 d.app_start("com.eg.android.AlipayGphone", stop=True)
 time.sleep(5)
 
@@ -19,17 +23,30 @@ def operate_task():
     global in_search
     start_time = time.time()
     taolive_btn = d(resourceId="com.taobao.taobao:id/taolive_close_btn")
-    if taolive_btn.exists:
-        time.sleep(20)
+    close_btn = d(resourceId="com.taobao.taobao.liveroom_android_plugin_AType:id/taolive_room_top_close_btn")
+    farm_close_btn = d(resourceId="com.taobao.taobao:id/back_home_btn")
+    # com.taobao.taobao.liveroom_android_plugin_AType:id/taolive_room_top_close_btn
+    if taolive_btn.exists or close_btn.exists or farm_close_btn.exists:
+        time.sleep(15)
         while True:
-            taolive_btn = d(resourceId="com.taobao.taobao:id/taolive_close_btn")
-            if not taolive_btn.exists:
-                break
-            d.press("back")
+            taolive_btn = d(resourceId="com.taobao.taobao:id/taolive_close_btn", clickable=True)
+            close_btn = d(resourceId="com.taobao.taobao.liveroom_android_plugin_AType:id/taolive_room_top_close_btn", clickable=True)
+            farm_close_btn = d(resourceId="com.taobao.taobao:id/back_home_btn")
+            if taolive_btn.exists:
+                taolive_btn.click()
+            elif close_btn.exists:
+                close_btn.click()
+            elif farm_close_btn.exists:
+                farm_close_btn.click()
+            else:
+                d.press("back")
             time.sleep(5)
+            home_view = d(className="android.widget.Image", text="做任务赚金币")
+            if home_view.exists:
+                break
     else:
         while True:
-            if time.time() - start_time > 20:
+            if time.time() - start_time > 15:
                 break
             d.swipe_ext(Direction.FORWARD)
             time.sleep(3)
@@ -70,7 +87,7 @@ if get_btn.exists:
     time.sleep(2)
 while True:
     time.sleep(3)
-    to_btn = d(className="android.widget.Button", text="去完成")
+    to_btn = d(className="android.widget.Button", textMatches="去完成|去浏览")
     if to_btn.exists:
         need_click_view = None
         need_click_index = 0
