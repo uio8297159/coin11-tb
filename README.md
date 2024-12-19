@@ -15,4 +15,4 @@ adb命令，获取当前打开的app包名和类名
 adb shell dumpsys window | grep mCurrentFocus
 ```
 
-$\color{red}{支付宝农场获取不到任务名称，还没有想到办法，有高手的话可以提交代码。}$
+$\color{red}{目前需要完成跳转其他app再返回的操作。}$

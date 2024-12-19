@@ -125,8 +125,9 @@ while True:
                     if view not in unclick_btn:
                         unclick_btn.append(view)
                     continue
-                if task_name in have_clicked:
-                    continue
+                # if task_name in have_clicked:
+                #     print("已经点击过了。", task_name)
+                #     continue
                 need_click_index = index
                 need_click_view = view
                 break
@@ -142,19 +143,19 @@ while True:
                 d(className="android.widget.Button", text="搜索").click()
                 in_search = True
                 time.sleep(2)
-            web_view = d(className="android.webkit.WebView")
-            live_view = d(resourceId="com.taobao.taobao:id/layermanager_penetrate_webview_container_id")
-            if web_view.exists(timeout=5) or live_view.exists(timeout=5):
-                operate_task()
+            # web_view = d(className="android.webkit.WebView")
+            # live_view = d(resourceId="com.taobao.taobao:id/layermanager_penetrate_webview_container_id")
+            # if web_view.exists(timeout=5) or live_view.exists(timeout=5):
+            operate_task()
         else:
             if not is_end:
-                d.swipe_ext(Direction.FORWARD)
-                d(scrollable=True).scroll.toEnd()
+                d(scrollable=True).scroll.vert.backward()
+                # d.swipe_ext(Direction.FORWARD)
+                # d(scrollable=True).scroll.toEnd()
                 is_end = True
             else:
                 error_count += 1
                 print("未找到可点击按钮", error_count)
                 if error_count > 6:
                     break
-d.watcher.remove()
-
+ctx.close()

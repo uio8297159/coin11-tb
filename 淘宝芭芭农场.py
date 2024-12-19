@@ -122,6 +122,11 @@ while True:
             if not is_end:
                 d.swipe_ext(Direction.FORWARD)
                 d(scrollable=True).scroll.toEnd()
+                fertilizer_detail = d(resourceId="fissionOverlayPortal", className="android.view.View")
+                if fertilizer_detail.exists:
+                    fertilizer_detail.click()
+                    time.sleep(2)
+                    d.press("back")
                 is_end = True
             else:
                 error_count += 1

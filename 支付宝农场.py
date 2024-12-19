@@ -87,13 +87,13 @@ if get_btn.exists:
     time.sleep(2)
 while True:
     time.sleep(3)
-    to_btn = d(className="android.widget.Button", textMatches="去完成|去浏览")
+    to_btn = d(className="android.widget.Button", textMatches="去完成|去浏览|去逛逛")
     if to_btn.exists:
         need_click_view = None
         need_click_index = 0
         task_name = None
         for index, view in enumerate(to_btn):
-            text_div = view.sibling(className="android.view.View", instance=0).child(className="android.widget.TextView", instance=0)
+            text_div = view.left(className="android.widget.TextView")
             if text_div.exists:
                 if check_chars_exist(text_div.get_text()):
                     if view not in unclick_btn:
