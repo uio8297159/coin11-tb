@@ -74,12 +74,16 @@ else:
 time.sleep(8)
 while True:
     print("检查按钮")
-    task_btn = d(className="android.widget.Button", text="任务列表")
-    if task_btn.exists:
-        d.click(task_btn[0].center()[0], task_btn[0].center()[1])
-        print("点击了任务列表按钮")
-        break
-    time.sleep(1)
+    try:
+        task_btn = d(className="android.widget.Button", text="任务列表")
+        if task_btn.exists:
+            d.click(task_btn[0].center()[0], task_btn[0].center()[1])
+            print("点击了任务列表按钮")
+            break
+        time.sleep(1)
+    except Exception as e:
+        print(e)
+        continue
 time.sleep(5)
 get_btn = d(className="android.widget.Button", text="领取")
 if get_btn.exists:
