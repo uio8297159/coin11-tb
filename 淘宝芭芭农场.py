@@ -4,7 +4,6 @@ import uiautomator2 as u2
 from uiautomator2 import Direction
 from utils import check_chars_exist
 
-in_search = False
 unclick_btn = []
 have_clicked = []
 is_end = False
@@ -13,47 +12,22 @@ in_other_app = False
 
 
 def operate_task():
-    global in_search
     start_time = time.time()
-    taolive_btn = d(resourceId="com.taobao.taobao:id/taolive_close_btn")
-    close_btn = d(resourceId="com.taobao.taobao.liveroom_android_plugin_AType:id/taolive_room_top_close_btn")
-    farm_close_btn = d(resourceId="com.taobao.taobao:id/back_home_btn")
-    # com.taobao.taobao.liveroom_android_plugin_AType:id/taolive_room_top_close_btn
-    if taolive_btn.exists or close_btn.exists or farm_close_btn.exists:
-        time.sleep(15)
-        while True:
-            taolive_btn = d(resourceId="com.taobao.taobao:id/taolive_close_btn", clickable=True)
-            close_btn = d(resourceId="com.taobao.taobao.liveroom_android_plugin_AType:id/taolive_room_top_close_btn", clickable=True)
-            farm_close_btn = d(resourceId="com.taobao.taobao:id/back_home_btn")
-            if taolive_btn.exists:
-                taolive_btn.click()
-            elif close_btn.exists:
-                close_btn.click()
-            elif farm_close_btn.exists:
-                farm_close_btn.click()
-            else:
-                d.press("back")
-            time.sleep(5)
-            home_view = d(className="android.widget.Image", text="做任务赚金币")
-            if home_view.exists:
-                break
-    else:
-        while True:
-            if time.time() - start_time > 15:
-                break
+    while True:
+        if time.time() - start_time > 16:
+            break
+        d.swipe_ext(Direction.FORWARD)
+        time.sleep(3)
+        d.swipe_ext(Direction.BACKWARD)
+        time.sleep(3)
+    while True:
+        if d(text="肥料明细").exists:
+            print("当前是任务列表画面，不能继续返回")
             d.swipe_ext(Direction.FORWARD)
-            time.sleep(3)
-            d.swipe_ext(Direction.BACKWARD)
-            time.sleep(3)
-        d.press("back")
-        if in_search:
-            time.sleep(2)
-            in_search = False
+            break
+        else:
             d.press("back")
-        if in_other_app:
-            # while True:
             time.sleep(0.5)
-            d.press("back")
 
 
 d = u2.connect()
@@ -113,7 +87,6 @@ while True:
             if search_view.exists:
                 d(className="android.widget.EditText", instance=0).send_keys("笔记本电脑")
                 d(className="android.widget.Button", text="搜索").click()
-                in_search = True
                 time.sleep(2)
             web_view = d(className="android.webkit.WebView")
             if web_view.exists(timeout=5):
