@@ -120,7 +120,6 @@ while True:
             text_div = view.sibling(className="android.view.View", instance=0).child(className="android.widget.TextView", instance=0)
             if text_div.exists:
                 task_name = text_div.get_text()
-                print(task_name)
                 if check_chars_exist(task_name):
                     if view not in unclick_btn:
                         unclick_btn.append(view)

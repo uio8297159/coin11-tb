@@ -23,7 +23,7 @@ def operate_task():
     while True:
         if d(text="肥料明细").exists:
             print("当前是任务列表画面，不能继续返回")
-            d.swipe_ext(Direction.FORWARD)
+            # d.swipe_ext(Direction.FORWARD)
             break
         else:
             d.press("back")
