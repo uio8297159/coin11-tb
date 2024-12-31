@@ -2,9 +2,8 @@ import time
 
 import uiautomator2 as u2
 from uiautomator2 import Direction
-from utils import check_chars_exist
+from utils import check_chars_exist, other_app
 
-in_search = False
 unclick_btn = []
 have_clicked = []
 is_end = False
@@ -22,51 +21,29 @@ ctx.when("O1CN012qVB9n1tvZ8ATEQGu_!!6000000005964-2-tps-144-144").click()
 ctx.when("O1CN01sORayC1hBVsDQRZoO_!!6000000004239-2-tps-426-128.png_").click()
 ctx.when(xpath="//android.app.Dialog//android.widget.Button[contains(text(), '-tps-')]").click()
 ctx.when(xpath="//android.app.Dialog//android.widget.Button[@text='关闭']").click()
-ctx.when(xpath="//android.widget.TextView[@package='com.eg.android.AlipayGphone']").click()
+# ctx.when(xpath="//android.widget.TextView[@package='com.eg.android.AlipayGphone']").click()
 ctx.start()
 time.sleep(5)
 
 
 def operate_task():
-    global in_search
     start_time = time.time()
-    taolive_btn = d(resourceId="com.taobao.taobao:id/taolive_close_btn")
-    close_btn = d(resourceId="com.taobao.taobao.liveroom_android_plugin_AType:id/taolive_room_top_close_btn")
-    # com.taobao.taobao.liveroom_android_plugin_AType:id/taolive_room_top_close_btn
-    if taolive_btn.exists or close_btn.exists:
-        time.sleep(15)
-        while True:
-            taolive_btn = d(resourceId="com.taobao.taobao:id/taolive_close_btn", clickable=True)
-            close_btn = d(resourceId="com.taobao.taobao.liveroom_android_plugin_AType:id/taolive_room_top_close_btn", clickable=True)
-            if taolive_btn.exists:
-                taolive_btn.click()
-                d.click(taolive_btn[0].center()[0], taolive_btn[0].center()[1])
-            elif close_btn.exists:
-                close_btn.click()
-                d.click(close_btn[0].center()[0], close_btn[0].center()[1])
-            else:
-                d.press("back")
-            time.sleep(5)
-            home_view = d(className="android.widget.Image", text="做任务赚金币")
-            if home_view.exists:
-                break
-    else:
-        while True:
-            if time.time() - start_time > 15:
-                break
+    while True:
+        if time.time() - start_time > 16:
+            break
+        if not in_other_app:
             d.swipe_ext(Direction.FORWARD)
             time.sleep(3)
             d.swipe_ext(Direction.BACKWARD)
             time.sleep(3)
-        d.press("back")
-        if in_search:
-            time.sleep(2)
-            in_search = False
+    while True:
+        if d(className="android.widget.TextView", text="赚金币抵钱").exists or d(className="android.widget.TextView", text="今日累计奖励").exists:
+            print("当前是任务列表画面，不能继续返回")
+            # d.swipe_ext(Direction.FORWARD)
+            break
+        else:
             d.press("back")
-        if in_other_app:
-            # while True:
             time.sleep(0.5)
-            d.press("back")
 
 
 ctx.wait_stable()
@@ -97,7 +74,13 @@ else:
     raise Exception("没有找到金币任务按钮")
 print("点击开始做任务")
 while True:
+    in_other_app = False
     time.sleep(4)
+    earn_btn = d(className="android.widget.TextView", text="赚更多金币")
+    if earn_btn.exists and not d(className="android.widget.TextView", text="赚金币抵钱").exists:
+        earn_btn.click()
+        time.sleep(2)
+        continue
     print("开始查找按钮。。。")
     get_btn = d(className="android.widget.Button", text="领取奖励")
     if get_btn.exists:
@@ -134,27 +117,29 @@ while True:
             print("点击按钮", task_name)
             if task_name not in have_clicked:
                 have_clicked.append(task_name)
+            if check_chars_exist(task_name, other_app):
+                in_other_app = True
             need_click_view.click()
             time.sleep(2)
             search_view = d(className="android.view.View", text="搜索有福利")
             if search_view.exists:
                 d(className="android.widget.EditText", instance=0).send_keys("笔记本电脑")
                 d(className="android.widget.Button", text="搜索").click()
-                in_search = True
                 time.sleep(2)
             # web_view = d(className="android.webkit.WebView")
             # live_view = d(resourceId="com.taobao.taobao:id/layermanager_penetrate_webview_container_id")
             # if web_view.exists(timeout=5) or live_view.exists(timeout=5):
             operate_task()
         else:
-            if not is_end:
-                d(scrollable=True).scroll.vert.backward()
-                # d.swipe_ext(Direction.FORWARD)
-                # d(scrollable=True).scroll.toEnd()
-                is_end = True
-            else:
-                error_count += 1
-                print("未找到可点击按钮", error_count)
-                if error_count > 6:
-                    break
+            error_count += 1
+            print("未找到可点击按钮", error_count)
+            if error_count > 3:
+                break
+draw_down_btn = d(className="android.widget.Button", text="立即领取")
+while True:
+    if draw_down_btn.exists:
+        draw_down_btn.click()
+        time.sleep(2)
+    else:
+        break
 ctx.close()
