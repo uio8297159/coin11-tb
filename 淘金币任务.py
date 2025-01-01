@@ -135,8 +135,8 @@ while True:
             print("未找到可点击按钮", error_count)
             if error_count > 3:
                 break
-draw_down_btn = d(className="android.widget.Button", text="立即领取")
 while True:
+    draw_down_btn = d(className="android.widget.Button", text="立即领取")
     if draw_down_btn.exists:
         draw_down_btn.click()
         time.sleep(2)
