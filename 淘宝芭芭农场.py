@@ -42,11 +42,11 @@ time.sleep(5)
 d.watcher.when("O1CN012qVB9n1tvZ8ATEQGu_!!6000000005964-2-tps-144-144").click()
 d.watcher.when(xpath="//android.app.Dialog//android.widget.Button[contains(text(), '-tps-')]").click()
 d.watcher.when(xpath="//android.app.Dialog//android.widget.Button[@text='关闭']").click()
-d.watcher.when(xpath="//android.widget.TextView[@package='com.eg.android.AlipayGphone']").click()
+# d.watcher.when(xpath="//android.widget.TextView[@package='com.eg.android.AlipayGphone']").click()
 d.watcher.when("O1CN01sORayC1hBVsDQRZoO_!!6000000004239-2-tps-426-128.png_").click()
 d.watcher.start()
 farm_btn = d(className="android.widget.FrameLayout", description="芭芭农场", instance=0)
-if not farm_btn.click_exists(timeout=10):
+if not farm_btn.click_exists(timeout=3):
     raise Exception("没有找到芭芭农场按钮")
 time.sleep(3)
 while True:
@@ -92,20 +92,10 @@ while True:
             if web_view.exists(timeout=5):
                 operate_task()
         else:
-            if not is_end:
-                d.swipe_ext(Direction.FORWARD)
-                d(scrollable=True).scroll.toEnd()
-                fertilizer_detail = d(resourceId="fissionOverlayPortal", className="android.view.View")
-                if fertilizer_detail.exists:
-                    fertilizer_detail.click()
-                    time.sleep(2)
-                    d.press("back")
-                is_end = True
-            else:
-                error_count += 1
-                print("未找到可点击按钮", error_count)
-                if error_count > 6:
-                    break
+            error_count += 1
+            print("未找到可点击按钮", error_count)
+            if error_count > 6:
+                break
 d.watcher.remove()
 
 
