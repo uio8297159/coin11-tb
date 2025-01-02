@@ -15,4 +15,4 @@ adb命令，获取当前打开的app包名和类名
 adb shell dumpsys window | grep mCurrentFocus
 ```
 
-$\color{red}{目前需要完成跳转其他app再返回的操作。}$
+$\color{red}{目前的问题是，uiautomator2将列表上滑一页后，获取的数据还是上一页的，这个问题已反馈作者但未解决。}$
