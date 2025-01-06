@@ -10,8 +10,8 @@ is_end = False
 error_count = 0
 in_other_app = False
 d = u2.connect()
-d.shell("adb kill-server && adb start-server")
-time.sleep(5)
+# d.shell("adb kill-server && adb start-server")
+# time.sleep(5)
 d.app_stop("com.taobao.taobao")
 # d.app_clear('com.taobao.taobao')
 time.sleep(2)
@@ -48,8 +48,9 @@ def operate_task():
 
 ctx.wait_stable()
 coin_btn = d(className="android.widget.FrameLayout", description="领淘金币", clickable=True)
-if coin_btn.exists(timeout=10):
-    coin_btn.click()
+if coin_btn.exists:
+    d.double_click(coin_btn[0].center()[0], coin_btn[0].center()[1])
+    # coin_btn.click()
     time.sleep(5)
     # home_btn = d(className="android.widget.Button", textContains="首页来访")
     # if home_btn.exists(timeout=4):
@@ -73,6 +74,7 @@ if earn_btn.exists(timeout=4):
 else:
     raise Exception("没有找到金币任务按钮")
 print("点击开始做任务")
+finish_count = 0
 while True:
     in_other_app = False
     time.sleep(4)
@@ -86,7 +88,11 @@ while True:
     if get_btn.exists:
         get_btn.click()
         print("点击领取奖励")
-        time.sleep(4)
+        time.sleep(2)
+        finish_count = finish_count + 1
+        if finish_count % 10 == 0:
+            d.swipe_ext("up", scale=0.15)
+            time.sleep(4)
         continue
     de_btn = d(className="android.widget.Button", text="点击得")
     if de_btn.exists:
@@ -94,7 +100,7 @@ while True:
         print("点击点击得")
         time.sleep(4)
         continue
-    to_btn = d(className="android.widget.Button", textMatches="去完成|去逛逛|去浏览|逛一逛")
+    to_btn = d(className="android.widget.Button", textMatches="去完成|去逛逛|去浏览|逛一逛|立即领|去领取|去拍照")
     if to_btn.exists:
         need_click_view = None
         need_click_index = 0

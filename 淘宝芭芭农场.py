@@ -14,7 +14,7 @@ in_other_app = False
 def operate_task():
     start_time = time.time()
     while True:
-        if time.time() - start_time > 16:
+        if time.time() - start_time > 15:
             break
         d.swipe_ext(Direction.FORWARD)
         time.sleep(3)
@@ -31,8 +31,8 @@ def operate_task():
 
 
 d = u2.connect()
-d.shell("adb kill-server && adb start-server")
-time.sleep(5)
+# d.shell("adb kill-server && adb start-server")
+# time.sleep(5)
 d.app_stop("com.taobao.taobao")
 # d.app_clear('com.taobao.taobao')
 time.sleep(2)
@@ -58,6 +58,7 @@ sign_btn = d(className="android.widget.Button", text="去签到")
 if sign_btn.exists:
     sign_btn.click()
     time.sleep(2)
+finish_count = 0
 while True:
     to_btn = d(className="android.widget.Button", textMatches="去完成|去浏览")
     if to_btn.exists:
@@ -72,8 +73,8 @@ while True:
                         unclick_btn.append(view)
                     continue
                 task_name = text_div.get_text()
-                if task_name in have_clicked:
-                    continue
+                # if task_name in have_clicked:
+                #     continue
                 need_click_index = index
                 need_click_view = view
                 break
@@ -88,14 +89,16 @@ while True:
                 d(className="android.widget.EditText", instance=0).send_keys("笔记本电脑")
                 d(className="android.widget.Button", text="搜索").click()
                 time.sleep(2)
-            web_view = d(className="android.webkit.WebView")
-            if web_view.exists(timeout=5):
-                operate_task()
+            operate_task()
+            finish_count = finish_count + 1
+            if finish_count % 3 == 0:
+                d.swipe_ext("up", scale=0.2)
+                time.sleep(4)
         else:
             error_count += 1
             print("未找到可点击按钮", error_count)
             if error_count > 6:
                 break
 d.watcher.remove()
-
+print(f"共自动化完成{finish_count}个任务")
 
