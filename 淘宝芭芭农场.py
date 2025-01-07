@@ -104,4 +104,4 @@ while True:
                 break
 d.watcher.remove()
 print(f"共自动化完成{finish_count}个任务")
-
+d.shell("settings put system accelerometer_rotation 0")
