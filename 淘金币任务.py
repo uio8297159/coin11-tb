@@ -5,7 +5,7 @@ from uiautomator2 import Direction
 from utils import check_chars_exist, other_app
 
 unclick_btn = []
-have_clicked = []
+have_clicked = dict()
 is_end = False
 error_count = 0
 in_other_app = False
@@ -90,8 +90,8 @@ while True:
         print("点击领取奖励")
         time.sleep(2)
         finish_count = finish_count + 1
-        if finish_count % 10 == 0:
-            d.swipe_ext("up", scale=0.15)
+        if finish_count % 8 == 0:
+            d.swipe_ext("up", scale=0.2)
             time.sleep(4)
         continue
     de_btn = d(className="android.widget.Button", text="点击得")
@@ -113,16 +113,18 @@ while True:
                     if view not in unclick_btn:
                         unclick_btn.append(view)
                     continue
-                # if task_name in have_clicked:
-                #     print("已经点击过了。", task_name)
-                #     continue
+                if task_name in have_clicked:
+                    if have_clicked[task_name] > 2:
+                        continue
                 need_click_index = index
                 need_click_view = view
                 break
         if need_click_view:
             print("点击按钮", task_name)
-            if task_name not in have_clicked:
-                have_clicked.append(task_name)
+            if have_clicked.get(task_name) is None:
+                have_clicked[task_name] = 1
+            else:
+                have_clicked[task_name] += 1
             if check_chars_exist(task_name, other_app):
                 in_other_app = True
             need_click_view.click()
@@ -141,6 +143,8 @@ while True:
             print("未找到可点击按钮", error_count)
             if error_count > 3:
                 break
+d(scrollable=True).scroll.toBeginning()
+time.sleep(4)
 while True:
     draw_down_btn = d(className="android.widget.Button", text="立即领取")
     if draw_down_btn.exists:

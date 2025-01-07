@@ -5,7 +5,7 @@ from uiautomator2 import Direction
 from utils import check_chars_exist
 
 unclick_btn = []
-have_clicked = []
+have_clicked = dict()
 is_end = False
 error_count = 0
 in_other_app = False
@@ -14,7 +14,7 @@ in_other_app = False
 def operate_task():
     start_time = time.time()
     while True:
-        if time.time() - start_time > 15:
+        if time.time() - start_time > 16:
             break
         d.swipe_ext(Direction.FORWARD)
         time.sleep(3)
@@ -73,15 +73,18 @@ while True:
                         unclick_btn.append(view)
                     continue
                 task_name = text_div.get_text()
-                # if task_name in have_clicked:
-                #     continue
+                if task_name in have_clicked:
+                    if have_clicked[task_name] > 2:
+                        continue
                 need_click_index = index
                 need_click_view = view
                 break
         if need_click_view:
             print("点击按钮", task_name)
-            if task_name not in have_clicked:
-                have_clicked.append(task_name)
+            if have_clicked.get(task_name) is None:
+                have_clicked[task_name] = 1
+            else:
+                have_clicked[task_name] += 1
             need_click_view.click()
             time.sleep(2)
             search_view = d(className="android.view.View", text="搜索有福利")
