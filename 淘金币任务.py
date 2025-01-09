@@ -10,11 +10,11 @@ is_end = False
 error_count = 0
 in_other_app = False
 d = u2.connect()
-# d.shell("adb kill-server && adb start-server")
-# time.sleep(5)
-d.app_stop("com.taobao.taobao")
+d.shell("adb kill-server && adb start-server")
+time.sleep(5)
+# d.app_stop("com.taobao.taobao")
 # d.app_clear('com.taobao.taobao')
-time.sleep(2)
+# time.sleep(2)
 d.app_start("com.taobao.taobao", stop=True)
 ctx = d.watch_context()
 ctx.when("O1CN012qVB9n1tvZ8ATEQGu_!!6000000005964-2-tps-144-144").click()
