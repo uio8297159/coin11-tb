@@ -158,3 +158,4 @@ while True:
 d(scrollable=True).scroll.toBeginning()
 ctx.close()
 d.shell("settings put system accelerometer_rotation 0")
+print("关闭手机自动旋转")
