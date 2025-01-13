@@ -21,6 +21,7 @@ ctx.when("O1CN012qVB9n1tvZ8ATEQGu_!!6000000005964-2-tps-144-144").click()
 ctx.when("O1CN01sORayC1hBVsDQRZoO_!!6000000004239-2-tps-426-128.png_").click()
 ctx.when("领取今日奖励").click()
 ctx.when("确认").click()
+ctx.when("点击刷新").click()
 ctx.when(xpath="//android.app.Dialog//android.widget.Button[contains(text(), '-tps-')]").click()
 ctx.when(xpath="//android.app.Dialog//android.widget.Button[@text='关闭']").click()
 # ctx.when(xpath="//android.widget.TextView[@package='com.eg.android.AlipayGphone']").click()
@@ -101,7 +102,7 @@ while True:
             print("点击领取奖励")
             time.sleep(2)
             finish_count = finish_count + 1
-            if finish_count % 8 == 0:
+            if finish_count % 3 == 0:
                 d.swipe_ext("up", scale=0.2)
                 time.sleep(4)
             continue
@@ -143,7 +144,11 @@ while True:
                 search_view = d(className="android.view.View", text="搜索有福利")
                 search_edit = d(resourceId="com.taobao.taobao:id/searchEdit")
                 search_btn = d(resourceId="com.taobao.taobao:id/searchbtn")
-                if search_edit.exists and search_btn.exists:
+                if search_view.exists:
+                    d(className="android.widget.EditText", instance=0).send_keys("笔记本电脑")
+                    d(className="android.widget.Button", text="搜索").click()
+                    time.sleep(2)
+                elif search_edit.exists and search_btn.exists:
                     search_edit.send_keys("笔记本电脑")
                     search_btn.click()
                     time.sleep(2)

@@ -45,6 +45,7 @@ d.watcher.when(xpath="//android.app.Dialog//android.widget.Button[contains(text(
 d.watcher.when(xpath="//android.app.Dialog//android.widget.Button[@text='关闭']").click()
 # d.watcher.when(xpath="//android.widget.TextView[@package='com.eg.android.AlipayGphone']").click()
 d.watcher.when("O1CN01sORayC1hBVsDQRZoO_!!6000000004239-2-tps-426-128.png_").click()
+d.watcher.when("点击刷新").click()
 d.watcher.start()
 print("开始查找芭芭农场按钮")
 farm_btn = d(className="android.widget.FrameLayout", description="芭芭农场")
