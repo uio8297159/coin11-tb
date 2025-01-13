@@ -102,7 +102,7 @@ while True:
             print("点击领取奖励")
             time.sleep(2)
             finish_count = finish_count + 1
-            if finish_count % 3 == 0:
+            if finish_count % 8 == 0:
                 d.swipe_ext("up", scale=0.2)
                 time.sleep(4)
             continue
