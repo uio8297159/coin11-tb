@@ -59,15 +59,15 @@ while True:
         print("点击集肥料按钮")
         break
 time.sleep(5)
-sign_btn = d(className="android.widget.Button", text="去签到")
-if sign_btn.exists:
-    sign_btn.click()
-    time.sleep(2)
 finish_count = 0
 while True:
     try:
         in_other_app = False
-        to_btn = d(className="android.widget.Button", textMatches="去完成|去浏览")
+        sign_btn = d(className="android.widget.Button", text="去签到")
+        if sign_btn.exists:
+            sign_btn.click()
+            time.sleep(2)
+        to_btn = d(className="android.widget.Button", textMatches="去完成|去浏览|去领取")
         if to_btn.exists:
             need_click_view = None
             need_click_index = 0
@@ -117,3 +117,4 @@ while True:
 d.watcher.remove()
 print(f"共自动化完成{finish_count}个任务")
 d.shell("settings put system accelerometer_rotation 0")
+print("关闭手机自动旋转")

@@ -19,6 +19,8 @@ d.app_start("com.taobao.taobao", stop=True)
 ctx = d.watch_context()
 ctx.when("O1CN012qVB9n1tvZ8ATEQGu_!!6000000005964-2-tps-144-144").click()
 ctx.when("O1CN01sORayC1hBVsDQRZoO_!!6000000004239-2-tps-426-128.png_").click()
+ctx.when("领取今日奖励").click()
+ctx.when("确认").click()
 ctx.when(xpath="//android.app.Dialog//android.widget.Button[contains(text(), '-tps-')]").click()
 ctx.when(xpath="//android.app.Dialog//android.widget.Button[@text='关闭']").click()
 # ctx.when(xpath="//android.widget.TextView[@package='com.eg.android.AlipayGphone']").click()
@@ -109,7 +111,7 @@ while True:
             print("点击点击得")
             time.sleep(4)
             continue
-        to_btn = d(className="android.widget.Button", textMatches="去完成|去逛逛|去浏览|逛一逛|立即领|去领取|去拍照")
+        to_btn = d(className="android.widget.Button", textMatches="去完成|去逛逛|去浏览|逛一逛|立即领|去领取|去看看|搜一下|玩一把|捐一笔")
         if to_btn.exists:
             need_click_view = None
             need_click_index = 0
@@ -139,9 +141,11 @@ while True:
                 need_click_view.click()
                 time.sleep(2)
                 search_view = d(className="android.view.View", text="搜索有福利")
-                if search_view.exists:
-                    d(className="android.widget.EditText", instance=0).send_keys("笔记本电脑")
-                    d(className="android.widget.Button", text="搜索").click()
+                search_edit = d(resourceId="com.taobao.taobao:id/searchEdit")
+                search_btn = d(resourceId="com.taobao.taobao:id/searchbtn")
+                if search_edit.exists and search_btn.exists:
+                    search_edit.send_keys("笔记本电脑")
+                    search_btn.click()
                     time.sleep(2)
                 # web_view = d(className="android.webkit.WebView")
                 # live_view = d(resourceId="com.taobao.taobao:id/layermanager_penetrate_webview_container_id")
@@ -158,3 +162,4 @@ while True:
 d(scrollable=True).scroll.toBeginning()
 ctx.close()
 d.shell("settings put system accelerometer_rotation 0")
+print("关闭手机自动旋转")
