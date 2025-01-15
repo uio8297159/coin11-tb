@@ -48,21 +48,28 @@ d.watcher.when("O1CN01sORayC1hBVsDQRZoO_!!6000000004239-2-tps-426-128.png_").cli
 d.watcher.when("点击刷新").click()
 d.watcher.start()
 print("开始查找芭芭农场按钮")
-farm_btn = d(className="android.widget.FrameLayout", description="芭芭农场")
-if farm_btn.exists(timeout=5):
-    farm_btn.click()
-else:
-    raise Exception("没有找到芭芭农场按钮")
-time.sleep(3)
+while True:
+    farm_btn = d(className="android.widget.FrameLayout", description="芭芭农场")
+    if farm_btn.exists(timeout=5):
+        farm_btn.click()
+        time.sleep(3)
+        temp_btn = d(className="android.widget.Button", textContains="每次施肥5次")
+        if temp_btn.exists:
+            break
+    else:
+        raise Exception("没有找到芭芭农场按钮")
 while True:
     fertilize_btn = d(className="android.widget.Button", textContains="集肥料")
     if fertilize_btn.click_exists(timeout=2):
         print("点击集肥料按钮")
-        break
-time.sleep(5)
+        time.sleep(5)
+        if d(text="肥料明细").exists:
+            print("进入任务页面")
+            break
 finish_count = 0
 while True:
     try:
+        print("开始查找按钮")
         in_other_app = False
         sign_btn = d(className="android.widget.Button", text="去签到")
         if sign_btn.exists:
