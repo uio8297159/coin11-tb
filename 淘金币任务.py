@@ -112,7 +112,7 @@ while True:
             print("点击点击得")
             time.sleep(4)
             continue
-        to_btn = d(className="android.widget.Button", textMatches="去完成|去逛逛|去浏览|逛一逛|立即领|去领取|去看看|搜一下|玩一把|捐一笔")
+        to_btn = d(className="android.widget.Button", textMatches="去完成|去逛逛|去浏览|逛一逛|立即领|去领取|去看看|搜一下|玩一把|捐一笔|逛一下")
         if to_btn.exists:
             need_click_view = None
             need_click_index = 0
