@@ -2,13 +2,22 @@ import time
 
 import uiautomator2 as u2
 from uiautomator2 import Direction
-from utils import check_chars_exist, other_app
+from utils import check_chars_exist, other_app, get_current_app
 
 unclick_btn = []
 have_clicked = dict()
 is_end = False
 error_count = 0
 in_other_app = False
+
+d = u2.connect()
+d.shell("adb kill-server && adb start-server")
+time.sleep(5)
+# d.app_stop("com.taobao.taobao")
+# d.app_clear('com.taobao.taobao')
+# time.sleep(2)
+d.app_start("com.taobao.taobao", stop=True)
+time.sleep(5)
 
 
 def operate_task():
@@ -24,21 +33,43 @@ def operate_task():
     while True:
         if d(text="肥料明细").exists:
             print("当前是任务列表画面，不能继续返回")
-            # d.swipe_ext(Direction.FORWARD)
             break
         else:
-            d.press("back")
-            time.sleep(0.5)
+            package_name, activity_name = get_current_app(d)
+            if package_name == "com.miui.home":
+                d.app_start("com.taobao.taobao")
+                break
+            elif package_name == "com.taobao.taobao":
+                if activity_name == "com.taobao.tao.welcome.Welcome":
+                    find_farm_btn()
+                    find_fertilizer_btn()
+                    break
+                else:
+                    d.press("back")
+                    time.sleep(0.2)
 
 
-d = u2.connect()
-d.shell("adb kill-server && adb start-server")
-time.sleep(5)
-# d.app_stop("com.taobao.taobao")
-# d.app_clear('com.taobao.taobao')
-# time.sleep(2)
-d.app_start("com.taobao.taobao", stop=True)
-time.sleep(5)
+def find_farm_btn():
+    while True:
+        farm_btn = d(className="android.widget.FrameLayout", description="芭芭农场")
+        if farm_btn.exists(timeout=5):
+            farm_btn.click()
+            time.sleep(3)
+            temp_btn = d(className="android.widget.Button", textContains="每次施肥5次")
+            if temp_btn.exists:
+                break
+
+
+def find_fertilizer_btn():
+    while True:
+        fertilize_btn = d(className="android.widget.Button", textContains="集肥料")
+        if fertilize_btn.click_exists(timeout=2):
+            print("点击集肥料按钮")
+            time.sleep(5)
+            if d(text="肥料明细").exists:
+                print("进入任务页面")
+                break
+
 
 d.watcher.when("O1CN012qVB9n1tvZ8ATEQGu_!!6000000005964-2-tps-144-144").click()
 d.watcher.when(xpath="//android.app.Dialog//android.widget.Button[contains(text(), '-tps-')]").click()
@@ -48,24 +79,8 @@ d.watcher.when("O1CN01sORayC1hBVsDQRZoO_!!6000000004239-2-tps-426-128.png_").cli
 d.watcher.when("点击刷新").click()
 d.watcher.start()
 print("开始查找芭芭农场按钮")
-while True:
-    farm_btn = d(className="android.widget.FrameLayout", description="芭芭农场")
-    if farm_btn.exists(timeout=5):
-        farm_btn.click()
-        time.sleep(3)
-        temp_btn = d(className="android.widget.Button", textContains="每次施肥5次")
-        if temp_btn.exists:
-            break
-    else:
-        raise Exception("没有找到芭芭农场按钮")
-while True:
-    fertilize_btn = d(className="android.widget.Button", textContains="集肥料")
-    if fertilize_btn.click_exists(timeout=2):
-        print("点击集肥料按钮")
-        time.sleep(5)
-        if d(text="肥料明细").exists:
-            print("进入任务页面")
-            break
+find_farm_btn()
+find_fertilizer_btn()
 finish_count = 0
 while True:
     try:

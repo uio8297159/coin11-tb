@@ -166,5 +166,6 @@ while True:
         continue
 d(scrollable=True).scroll.toBeginning()
 ctx.close()
+print(f"共自动化完成{finish_count}个任务")
 d.shell("settings put system accelerometer_rotation 0")
 print("关闭手机自动旋转")
