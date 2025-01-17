@@ -14,7 +14,7 @@ d.shell("adb kill-server && adb start-server")
 time.sleep(5)
 d.app_stop("com.eg.android.AlipayGphone")
 time.sleep(2)
-d.app_start("com.eg.android.AlipayGphone", stop=True)
+d.app_start("com.eg.android.AlipayGphone", stop=True, use_monkey=True)
 time.sleep(5)
 
 
