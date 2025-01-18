@@ -36,17 +36,16 @@ def operate_task():
             break
         else:
             package_name, activity_name = get_current_app(d)
-            if package_name == "com.miui.home":
-                d.app_start("com.taobao.taobao")
-                break
-            elif package_name == "com.taobao.taobao":
+            # if package_name == "com.miui.home":
+            #     d.app_start("com.taobao.taobao")
+            #     break
+            if package_name == "com.taobao.taobao":
                 if activity_name == "com.taobao.tao.welcome.Welcome":
                     find_farm_btn()
                     find_fertilizer_btn()
                     break
-                else:
-                    d.press("back")
-                    time.sleep(0.2)
+            d.press("back")
+            time.sleep(0.2)
 
 
 def find_farm_btn():
@@ -85,6 +84,7 @@ finish_count = 0
 while True:
     try:
         print("开始查找按钮")
+        time.sleep(4)
         in_other_app = False
         sign_btn = d(className="android.widget.Button", text="去签到")
         if sign_btn.exists:
