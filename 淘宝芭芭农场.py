@@ -49,6 +49,7 @@ def operate_task():
 
 
 def find_farm_btn():
+    no_found_count = 0
     while True:
         farm_btn = d(className="android.widget.FrameLayout", description="芭芭农场")
         if farm_btn.exists(timeout=5):
@@ -57,6 +58,13 @@ def find_farm_btn():
             temp_btn = d(className="android.widget.Button", textContains="每次施肥5次")
             if temp_btn.exists:
                 break
+        else:
+            no_found_count += 1
+            time.sleep(3)
+            if no_found_count > 3:
+                d.app_start("com.taobao.taobao", stop=True, use_monkey=True)
+                time.sleep(5)
+                find_farm_btn()
 
 
 def find_fertilizer_btn():
@@ -73,6 +81,7 @@ def find_fertilizer_btn():
 d.watcher.when("O1CN012qVB9n1tvZ8ATEQGu_!!6000000005964-2-tps-144-144").click()
 d.watcher.when(xpath="//android.app.Dialog//android.widget.Button[contains(text(), '-tps-')]").click()
 d.watcher.when(xpath="//android.app.Dialog//android.widget.Button[@text='关闭']").click()
+d.watcher.when(xpath="//android.widget.FrameLayout[@resource-id='com.taobao.taobao:id/poplayer_native_state_center_layout_frame_id']//android.widget.ImageView[@content-desc='关闭按钮']").click()
 # d.watcher.when(xpath="//android.widget.TextView[@package='com.eg.android.AlipayGphone']").click()
 d.watcher.when("O1CN01sORayC1hBVsDQRZoO_!!6000000004239-2-tps-426-128.png_").click()
 d.watcher.when("点击刷新").click()

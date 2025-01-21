@@ -21,3 +21,12 @@ def get_current_app(d):
 
 
 other_app = ["蚂蚁森林", "农场", "百度", "支付宝", "芝麻信用", "蚂蚁庄园", "闲鱼", "神奇海洋", "淘宝特价版", "点淘", "饿了么", "微博", "直播", "领肥料礼包", "福气提现金", "看小说", "菜鸟", "斗地主", "领肥料礼包"]
+
+
+def fish_not_click(text, chars=None):
+    if chars is None:
+        chars = ["拼手气红包"]
+    for char in chars:
+        if char in text:
+            return True
+    return False
