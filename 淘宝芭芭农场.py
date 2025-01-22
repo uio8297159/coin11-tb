@@ -21,6 +21,8 @@ time.sleep(5)
 
 
 def operate_task():
+    if d(text="肥料明细").exists:
+        return
     start_time = time.time()
     while True:
         if time.time() - start_time > 16:
@@ -68,6 +70,7 @@ def find_farm_btn():
 
 
 def find_fertilizer_btn():
+    print("开始查找集肥料按钮...")
     while True:
         fertilize_btn = d(className="android.widget.Button", textContains="集肥料")
         if fertilize_btn.click_exists(timeout=2):

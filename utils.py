@@ -1,4 +1,6 @@
 import re
+import cv2
+import numpy as np
 
 
 def check_chars_exist(text, chars=None):
@@ -25,8 +27,29 @@ other_app = ["蚂蚁森林", "农场", "百度", "支付宝", "芝麻信用", "�
 
 def fish_not_click(text, chars=None):
     if chars is None:
-        chars = ["拼手气红包"]
+        chars = ["拼手气红包", "发布一件新宝贝", "好物夺宝", "买到或卖出"]
     for char in chars:
         if char in text:
             return True
     return False
+
+
+def find_button(image, btn_path):
+    template = cv2.imread(btn_path)
+    # 转换为灰度图像
+    screenshot_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    template_gray = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)
+
+    # 获取模板图像的宽度和高度
+    w, h = template_gray.shape[::-1]
+
+    # 使用模板匹配
+    res = cv2.matchTemplate(screenshot_gray, template_gray, cv2.TM_CCOEFF_NORMED)
+    threshold = 0.8
+    loc = np.where(res >= threshold)
+    loc = zip(*loc[::-1])
+    if len(loc) > 0:
+        pt = loc[0]
+        x, y = pt
+        return x, y, w, h
+    return None
