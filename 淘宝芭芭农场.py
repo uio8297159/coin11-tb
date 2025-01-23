@@ -32,12 +32,13 @@ def operate_task():
             time.sleep(3)
             d.swipe_ext(Direction.BACKWARD)
             time.sleep(3)
+    try_count = 0
     while True:
-        if d(text="肥料明细").exists:
+        package_name, activity_name = get_current_app(d)
+        if package_name == "com.taobao.taobao" and d(text="肥料明细").exists:
             print("当前是任务列表画面，不能继续返回")
             break
         else:
-            package_name, activity_name = get_current_app(d)
             # if package_name == "com.miui.home":
             #     d.app_start("com.taobao.taobao")
             #     break
@@ -47,17 +48,24 @@ def operate_task():
                     find_fertilizer_btn()
                     break
             d.press("back")
+            print(f"点击返回,try_count={try_count},package_name={package_name},activity_name={activity_name}")
+            try_count += 1
             time.sleep(0.2)
+            if try_count > 10:
+                break
+    check_error_page()
 
 
+# 查找芭芭农场按钮
 def find_farm_btn():
+    print("开始查找芭芭农场按钮")
     no_found_count = 0
     while True:
         farm_btn = d(className="android.widget.FrameLayout", description="芭芭农场")
         if farm_btn.exists(timeout=5):
             farm_btn.click()
-            time.sleep(3)
-            temp_btn = d(className="android.widget.Button", textContains="每次施肥5次")
+            time.sleep(5)
+            temp_btn = d(className="android.widget.Button", textContains="集肥料")
             if temp_btn.exists:
                 break
         else:
@@ -69,6 +77,7 @@ def find_farm_btn():
                 find_farm_btn()
 
 
+# 查找集肥料按钮
 def find_fertilizer_btn():
     print("开始查找集肥料按钮...")
     while True:
@@ -81,6 +90,26 @@ def find_fertilizer_btn():
                 break
 
 
+# 任务完成后检查
+def check_error_page():
+    while True:
+        time.sleep(3)
+        if d(text="肥料明细").exists:
+            break
+        package, activity = get_current_app(d)
+        if package != "com.taobao.taobao":
+            d.app_start("com.taobao.taobao", stop=False)
+        else:
+            if activity == "com.taobao.tao.welcome.Welcome":
+                find_farm_btn()
+                find_fertilizer_btn()
+            elif activity == "com.taobao.themis.container.app.TMSActivity":
+                try:
+                    find_fertilizer_btn()
+                except Exception as e:
+                    print(e)
+
+
 d.watcher.when("O1CN012qVB9n1tvZ8ATEQGu_!!6000000005964-2-tps-144-144").click()
 d.watcher.when(xpath="//android.app.Dialog//android.widget.Button[contains(text(), '-tps-')]").click()
 d.watcher.when(xpath="//android.app.Dialog//android.widget.Button[@text='关闭']").click()
@@ -89,7 +118,6 @@ d.watcher.when(xpath="//android.widget.FrameLayout[@resource-id='com.taobao.taob
 d.watcher.when("O1CN01sORayC1hBVsDQRZoO_!!6000000004239-2-tps-426-128.png_").click()
 d.watcher.when("点击刷新").click()
 d.watcher.start()
-print("开始查找芭芭农场按钮")
 find_farm_btn()
 find_fertilizer_btn()
 finish_count = 0
