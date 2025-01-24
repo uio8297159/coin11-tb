@@ -35,10 +35,34 @@ def back_to_ad():
         time.sleep(0.2)
 
 
+def back_to_task():
+    while True:
+        if d(className="android.webkit.WebView", text="闲鱼币首页").exists:
+            print("当前是闲鱼币首页，不能继续返回")
+            break
+        else:
+            d.press("back")
+            time.sleep(0.1)
+
+
 def operate_task():
     _, activity = get_current_app(d)
     if activity == "com.taobao.idlefish.ads.ylh.YlhPortraitADActivity":
+        print("第一种情况：去微信看短剧或点击广告看详情")
         while True:
+            click_btn = d(className="android.widget.TextView", textContains="点击广告")
+            if click_btn.exists:
+                detail_btn = d(className="android.widget.TextView", text="查看详情")
+                if detail_btn.exists:
+                    d.click(detail_btn[0].center()[0], detail_btn[0].center()[1])
+                    time.sleep(5)
+                    back_to_ad()
+                    image = d.screenshot(format='opencv')
+                    pt = find_button(image, "./img/fish_close.png")
+                    if pt:
+                        d.click(int(pt[0]) + 5, int(pt[1]) + 5)
+                        time.sleep(2)
+                    break
             wechat_btn = d(className="android.widget.TextView", text="去微信看短剧")
             if wechat_btn.exists:
                 d.click(wechat_btn[0].center()[0], wechat_btn[0].center()[1])
@@ -54,22 +78,25 @@ def operate_task():
             wechat_btn = d(className="android.widget.TextView", text="去微信看全集")
             if wechat_btn.exists:
                 image = d.screenshot(format='opencv')
-                x, y = find_button(image, "./img/fish_close.png")
-                if x and y:
-                    d.click(x + 5, y + 5)
+                pt = find_button(image, "./img/fish_close.png")
+                if pt:
+                    d.click(int(pt[0]) + 5, int(pt[1]) + 5)
                     time.sleep(2)
                 break
     elif activity == "com.taobao.idlefish.ads.csj.TTAdStandardPortraitActivity":
-        time_div = d(className="android.widget.TextView", textMatches=r"\d+s")
-        if time_div.exists:
-            time.sleep(int(time_div[0].get_text().replace("s", "")) + 3)
-            while True:
-                if d(className="android.webkit.WebView", text="闲鱼币首页").exists:
-                    print("当前是闲鱼币首页，不能继续返回")
-                    break
-                else:
-                    d.press("back")
-                    time.sleep(0.1)
+        print("第二种情况：我要直接拿奖励")
+        while True:
+            direct_btn = d(className="android.widget.TextView", text="我要直接拿奖励")
+            if direct_btn.exists:
+                d.click(direct_btn[0].center()[0], direct_btn[0].center()[1])
+                time.sleep(20)
+                break
+            time_div = d(className="android.widget.TextView", textMatches=r"\d+s")
+            if time_div.exists:
+                time.sleep(int(time_div[0].get_text().replace("s", "")) + 3)
+                break
+            time.sleep(3)
+        back_to_task()
     else:
         if d(className="android.view.View", resourceId="mapDiceBtn").exists and not d(className="android.view.View", resourceId="taskWrap").exists:
             print("首页滑动，开始模拟滑动")
@@ -87,32 +114,39 @@ def operate_task():
             time.sleep(2)
             click_earn()
         else:
-            search_view = d(className="android.view.View", text="搜索有福利")
-            search_edit = d(resourceId="com.taobao.taobao:id/searchEdit")
-            search_btn = d(resourceId="com.taobao.taobao:id/searchbtn")
-            if search_view.exists:
-                d(className="android.widget.EditText", instance=0).send_keys("笔记本电脑")
-                d(className="android.widget.Button", text="搜索").click()
-                time.sleep(2)
-            elif search_edit.exists and search_btn.exists:
-                search_edit.send_keys("笔记本电脑")
-                search_btn.click()
-                time.sleep(2)
-            start_time = time.time()
-            while True:
-                d.swipe_ext("up")
-                time.sleep(1)
-                d.swipe_ext("down")
-                time.sleep(1)
-                if time.time() - start_time > 25:
-                    break
-            while True:
-                if d(className="android.webkit.WebView", text="闲鱼币首页").exists:
-                    print("当前是闲鱼币首页，不能继续返回")
-                    break
-                else:
-                    d.press("back")
-                    time.sleep(0.1)
+            advert_text = d(className="android.widget.TextView", textContains="广告")
+            if advert_text.exists:
+                while True:
+                    touch_btn = d(className="android.widget.TextView", text="点击广告可领取奖励")
+                    if touch_btn.exists:
+                        download_btn = d(className="android.widget.TextView", text="立即下载")
+                        if download_btn.exists:
+                            d.click(50, download_btn[0].center()[1])
+                            time.sleep(5)
+                            back_to_task()
+                            break
+                    time.sleep(3)
+            else:
+                search_view = d(className="android.view.View", text="搜索有福利")
+                search_edit = d(resourceId="com.taobao.taobao:id/searchEdit")
+                search_btn = d(resourceId="com.taobao.taobao:id/searchbtn")
+                if search_view.exists:
+                    d(className="android.widget.EditText", instance=0).send_keys("笔记本电脑")
+                    d(className="android.widget.Button", text="搜索").click()
+                    time.sleep(2)
+                elif search_edit.exists and search_btn.exists:
+                    search_edit.send_keys("笔记本电脑")
+                    search_btn.click()
+                    time.sleep(2)
+                start_time = time.time()
+                while True:
+                    d.swipe_ext("up")
+                    time.sleep(1)
+                    d.swipe_ext("down")
+                    time.sleep(1)
+                    if time.time() - start_time > 25:
+                        break
+                back_to_task()
 
 
 time.sleep(5)
@@ -121,6 +155,7 @@ while True:
     _, activity_name = get_current_app(d)
     if activity_name == "com.taobao.idlefish.maincontainer.activity.MainActivity":
         sign_btn = d(resourceId="com.taobao.idlefish:id/icon_entry_lottie", className="android.widget.ImageView", clickable=True)
+        print("查找签到按钮，存在:", sign_btn.exists)
         if sign_btn.exists:
             sign_btn.click()
             time.sleep(4)
@@ -167,19 +202,16 @@ while True:
                 print(f"识别成功:{task_name}")
                 if fish_not_click(task_name):
                     continue
-                # if task_name in have_clicked:
-                #     if have_clicked[task_name] > 2:
-                #         continue
                 need_click_view = btn
                 break
-            if need_click_view and task_name:
-                need_click_view.click()
-                print("点击按钮", task_name)
+            if need_click_view.exists and task_name:
+                d.double_click(need_click_view.center()[0], need_click_view.center()[1])
+                print(f"点击按钮{task_name}")
                 if have_clicked.get(task_name) is None:
                     have_clicked[task_name] = 1
                 else:
                     have_clicked[task_name] += 1
-                time.sleep(3)
+                time.sleep(8 if "视频" in task_name else 3)
                 operate_task()
             else:
                 error_count += 1
