@@ -21,7 +21,9 @@ time.sleep(5)
 
 
 def operate_task():
-    if d(text="肥料明细").exists:
+    is_task = d(className="android.webkit.WebView", text="芭芭农场").exists
+    print(f"是否在任务页面:{is_task}")
+    if is_task:
         return
     start_time = time.time()
     while True:
@@ -48,7 +50,6 @@ def operate_task():
                     find_fertilizer_btn()
                     break
             d.press("back")
-            print(f"点击返回,try_count={try_count},package_name={package_name},activity_name={activity_name}")
             try_count += 1
             time.sleep(0.2)
             if try_count > 10:
@@ -148,6 +149,8 @@ while True:
                             continue
                     need_click_index = index
                     need_click_view = view
+                    if "微博" in task_name:
+                        print(task_name)
                     break
             if need_click_view:
                 print("点击按钮", task_name)
@@ -166,7 +169,7 @@ while True:
                     time.sleep(2)
                 operate_task()
                 finish_count = finish_count + 1
-                if finish_count % 3 == 0:
+                if finish_count % 8 == 0:
                     d.swipe_ext("up", scale=0.2)
                     time.sleep(4)
             else:

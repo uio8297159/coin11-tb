@@ -59,7 +59,17 @@ def operate_task():
                     d.click(x + 5, y + 5)
                     time.sleep(2)
                 break
-
+    elif activity == "com.taobao.idlefish.ads.csj.TTAdStandardPortraitActivity":
+        time_div = d(className="android.widget.TextView", textMatches=r"\d+s")
+        if time_div.exists:
+            time.sleep(int(time_div[0].get_text().replace("s", "")) + 3)
+            while True:
+                if d(className="android.webkit.WebView", text="闲鱼币首页").exists:
+                    print("当前是闲鱼币首页，不能继续返回")
+                    break
+                else:
+                    d.press("back")
+                    time.sleep(0.1)
     else:
         if d(className="android.view.View", resourceId="mapDiceBtn").exists and not d(className="android.view.View", resourceId="taskWrap").exists:
             print("首页滑动，开始模拟滑动")
@@ -157,9 +167,9 @@ while True:
                 print(f"识别成功:{task_name}")
                 if fish_not_click(task_name):
                     continue
-                if task_name in have_clicked:
-                    if have_clicked[task_name] > 2:
-                        continue
+                # if task_name in have_clicked:
+                #     if have_clicked[task_name] > 2:
+                #         continue
                 need_click_view = btn
                 break
             if need_click_view and task_name:
