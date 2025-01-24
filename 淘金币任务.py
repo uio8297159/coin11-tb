@@ -2,7 +2,7 @@ import time
 
 import uiautomator2 as u2
 from uiautomator2 import Direction
-from utils import check_chars_exist, other_app
+from utils import check_chars_exist, other_app, get_current_app
 
 unclick_btn = []
 have_clicked = dict()
@@ -40,6 +40,7 @@ def operate_task():
             time.sleep(3)
             d.swipe_ext(Direction.BACKWARD)
             time.sleep(3)
+    try_count = 0
     while True:
         if d(className="android.widget.TextView", text="赚金币抵钱").exists or d(className="android.widget.TextView", text="今日累计奖励").exists:
             print("当前是任务列表画面，不能继续返回")
@@ -48,6 +49,36 @@ def operate_task():
         else:
             d.press("back")
             time.sleep(0.5)
+            try_count += 1
+            if try_count > 10:
+                break
+    check_error_page()
+
+
+def check_error_page():
+    while True:
+        time.sleep(3)
+        if d(className="android.widget.TextView", text="赚金币抵钱").exists or d(className="android.widget.TextView", text="今日累计奖励").exists:
+            break
+        package, activity = get_current_app(d)
+        if package != "com.taobao.taobao":
+            d.app_start("com.taobao.taobao", stop=False)
+        else:
+            if activity == "com.taobao.tao.welcome.Welcome":
+                find_coin_btn()
+
+
+def find_coin_btn():
+    coin_btn = d(className="android.widget.FrameLayout", description="领淘金币", clickable=True)
+    if coin_btn.exists:
+        d.double_click(coin_btn[0].center()[0], coin_btn[0].center()[1])
+        time.sleep(5)
+    else:
+        d(className="android.view.View", description="搜索栏").click()
+        d(resourceId="com.taobao.taobao:id/searchEdit").send_keys("淘金币")
+        time.sleep(3)
+        d(className="android.view.View", descriptionContains="淘金币").click()
+        time.sleep(5)
 
 
 ctx.wait_stable()
@@ -55,22 +86,7 @@ close_btn = d(className="android.widget.ImageView", description="关闭按钮")
 if close_btn.exists:
     close_btn.click()
     time.sleep(3)
-coin_btn = d(className="android.widget.FrameLayout", description="领淘金币", clickable=True)
-if coin_btn.exists:
-    d.double_click(coin_btn[0].center()[0], coin_btn[0].center()[1])
-    # coin_btn.click()
-    time.sleep(5)
-    # home_btn = d(className="android.widget.Button", textContains="首页来访")
-    # if home_btn.exists(timeout=4):
-    #     home_btn.click()
-    #     print("点击首页来访")
-    #     time.sleep(3)
-else:
-    d(className="android.view.View", description="搜索栏").click()
-    d(resourceId="com.taobao.taobao:id/searchEdit").send_keys("淘金币")
-    time.sleep(3)
-    d(className="android.view.View", descriptionContains="淘金币").click()
-    time.sleep(5)
+find_coin_btn()
 earn_btn = d(className="android.widget.TextView", textContains="签到领金币")
 if earn_btn.exists(timeout=4):
     earn_btn.click()
