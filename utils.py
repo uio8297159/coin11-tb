@@ -1,6 +1,7 @@
 import re
 import cv2
 import numpy as np
+import ddddocr
 
 
 def check_chars_exist(text, chars=None):
@@ -27,7 +28,7 @@ other_app = ["蚂蚁森林", "农场", "百度", "支付宝", "芝麻信用", "�
 
 def fish_not_click(text, chars=None):
     if chars is None:
-        chars = ["拼手气红包", "发布一件新宝贝", "好物夺宝", "买到或卖出", "快手", "中国移动"]
+        chars = ["发布一件新宝贝", "好物夺宝", "买到或卖出", "快手", "中国移动"]
     for char in chars:
         if char in text:
             return True
@@ -47,4 +48,19 @@ def find_button(image, btn_path):
     loc = np.where(res >= threshold)
     for pt in zip(*loc[::-1]):
         return pt
+    return None
+
+
+def find_text_position(image, text):
+    ocr = ddddocr.DdddOcr(show_ad=False)
+    ocr_result = ocr.classification(image)
+    # 将 OCR 结果按行解析
+    lines = ocr_result.split('\n')
+    # 遍历每一行，查找目标文本的位置
+    for line in lines:
+        if text in line:
+            # 获取文本的位置
+            start_index = line.find(text)
+            end_index = start_index + len(text)
+            return start_index, end_index
     return None

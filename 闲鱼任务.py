@@ -1,7 +1,7 @@
 import time
 
 import uiautomator2 as u2
-from utils import get_current_app, fish_not_click, find_button
+from utils import get_current_app, fish_not_click, find_button, find_text_position
 import ddddocr
 
 d = u2.connect()
@@ -9,6 +9,7 @@ d.app_start("com.taobao.idlefish", stop=True, use_monkey=True)
 screen_width, screen_height = d.window_size()
 ctx = d.watch_context()
 ctx.when("暂不升级").click()
+ctx.when("放弃").click()
 ctx.start()
 have_clicked = dict()
 error_count = 0
@@ -113,6 +114,17 @@ def operate_task():
             d(scrollable=True).fling.vert.toBeginning(max_swipes=1000)
             time.sleep(2)
             click_earn()
+        elif d(className="android.widget.TextView", text="我的夺宝").exists:
+            print("我的夺宝页面...")
+            take_part_btn = d(className="android.widget.TextView", textContains="500币")
+            if take_part_btn.exists:
+                d.click(take_part_btn[0].center()[0], take_part_btn[0].center()[1])
+                time.sleep(2)
+                pt = find_button(d.screenshot(format='opencv'), "./img/fish_confirm_attend.png")
+                if pt:
+                    d.click(screen_width / 2, int(pt[1]) + 20)
+                    time.sleep(2)
+            back_to_task()
         else:
             advert_text = d(className="android.widget.TextView", textContains="广告")
             if advert_text.exists:
@@ -154,10 +166,14 @@ ctx.wait_stable()
 while True:
     _, activity_name = get_current_app(d)
     if activity_name == "com.taobao.idlefish.maincontainer.activity.MainActivity":
-        sign_btn = d(resourceId="com.taobao.idlefish:id/icon_entry_lottie", className="android.widget.ImageView", clickable=True)
-        print("查找签到按钮，存在:", sign_btn.exists)
-        if sign_btn.exists:
-            sign_btn.click()
+        sign_btn1 = d(resourceId="com.taobao.idlefish:id/icon_entry_lottie", className="android.widget.ImageView", clickable=True)
+        sign_btn2 = d(className="android.widget.ImageView", resourceId="com.taobao.idlefish:id/icon_entry")
+        print(f"查找签到按钮，存在:{sign_btn1.exists}, {sign_btn2.exists}")
+        if sign_btn1.exists:
+            d.double_click(sign_btn1[0].center()[0], sign_btn1[0].center()[1])
+            time.sleep(4)
+        elif sign_btn2.exists:
+            d.double_click(sign_btn2[0].center()[0], sign_btn2[0].center()[1])
             time.sleep(4)
     elif activity_name == "com.taobao.idlefish.webview.WebHybridActivity":
         if d(className="android.view.View", resourceId="mapDiceBtn").exists:
