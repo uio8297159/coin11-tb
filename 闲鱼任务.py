@@ -132,6 +132,8 @@ def operate_task():
             back_to_task()
         elif d(className="android.webkit.WebView", text="好物夺宝").exists:
             print("好物夺宝页面...")
+            # todo 待做领取奖励
+            # re_btn = d(className="android.widget.Image", text="TB1NMQKL7voK1RjSZPfXXXPKFXa-112-78")
             treasures_btn = d(className="android.widget.TextView", textContains="闲鱼币夺宝")
             if treasures_btn.exists:
                 d.click(treasures_btn[0].center()[0], treasures_btn[0].center()[1])
