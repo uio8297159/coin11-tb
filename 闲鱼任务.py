@@ -10,6 +10,7 @@ screen_width, screen_height = d.window_size()
 ctx = d.watch_context()
 ctx.when("暂不升级").click()
 ctx.when("放弃").click()
+ctx.when("确定").click()
 ctx.start()
 have_clicked = dict()
 error_count = 0
@@ -97,6 +98,11 @@ def operate_task():
                 d.click(direct_btn[0].center()[0], direct_btn[0].center()[1])
                 time.sleep(20)
                 break
+            detail_btn = d(className="android.widget.TextView", text="查看详情")
+            if detail_btn.exists:
+                d.click(detail_btn[0].center()[0], detail_btn[0].center()[1])
+                time.sleep(5)
+                break
             time_div = d(className="android.widget.TextView", textMatches=r"\d+s")
             if time_div.exists:
                 time.sleep(int(time_div[0].get_text().replace("s", "")) + 3)
@@ -121,6 +127,24 @@ def operate_task():
             click_earn()
         elif d(className="android.widget.TextView", text="我的夺宝").exists:
             print("我的夺宝页面...")
+            treasures_btn = d(className="android.widget.TextView", text="我的夺宝")
+            if treasures_btn.exists:
+                d.click(screen_width / 2, treasures_btn[0].bounds()[3] + 20)
+                time.sleep(2)
+                red_btn = d(className="android.widget.TextView", textMatches=r"获得\d+个红包.*")
+                if red_btn.exists:
+                    d.click(red_btn[0].bounds()[2] - 20, red_btn[0].center()[1])
+                    time.sleep(3)
+                    pt = find_button(d.screenshot(format='opencv'), "./img/fish_open.png")
+                    print(f"查找到一键开启按钮结果：{pt}")
+                    if pt:
+                        d.click(int(pt[0]) + 5, int(pt[1]) + 5)
+                        time.sleep(2)
+                    while True:
+                        if d(className="android.widget.TextView", text="我的夺宝").exists:
+                            break
+                        d.press("back")
+                        time.sleep(0.2)
             take_part_btn = d(className="android.widget.TextView", textContains="500币")
             if take_part_btn.exists:
                 d.click(take_part_btn[0].center()[0], take_part_btn[0].center()[1])
@@ -132,7 +156,6 @@ def operate_task():
             back_to_task()
         elif d(className="android.webkit.WebView", text="好物夺宝").exists:
             print("好物夺宝页面...")
-            # todo 待做领取奖励
             # re_btn = d(className="android.widget.Image", text="TB1NMQKL7voK1RjSZPfXXXPKFXa-112-78")
             treasures_btn = d(className="android.widget.TextView", textContains="闲鱼币夺宝")
             if treasures_btn.exists:
@@ -166,6 +189,7 @@ def operate_task():
         else:
             advert_text = d(className="android.widget.TextView", textContains="广告")
             if advert_text.exists:
+                print("看广告领取奖励页面")
                 while True:
                     touch_btn = d(className="android.widget.TextView", text="点击广告可领取奖励")
                     if touch_btn.exists:
@@ -177,6 +201,7 @@ def operate_task():
                             break
                     time.sleep(3)
             else:
+                print("普通页面")
                 search_view = d(className="android.view.View", text="搜索有福利")
                 search_edit = d(resourceId="com.taobao.taobao:id/searchEdit")
                 search_btn = d(resourceId="com.taobao.taobao:id/searchbtn")
@@ -189,13 +214,15 @@ def operate_task():
                     search_btn.click()
                     time.sleep(2)
                 start_time = time.time()
+                print("开始上下滑动")
                 while True:
-                    d.swipe_ext("up")
+                    d.swipe_ext(u2.Direction.FORWARD)
                     time.sleep(1)
-                    d.swipe_ext("down")
+                    d.swipe_ext(u2.Direction.BACKWARD)
                     time.sleep(1)
                     if time.time() - start_time > 25:
                         break
+                print("滑动完毕，开始退出")
                 back_to_task()
 
 

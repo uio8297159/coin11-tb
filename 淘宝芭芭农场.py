@@ -149,8 +149,6 @@ while True:
                             continue
                     need_click_index = index
                     need_click_view = view
-                    if "微博" in task_name:
-                        print(task_name)
                     break
             if need_click_view:
                 print("点击按钮", task_name)
