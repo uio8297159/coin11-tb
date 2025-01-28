@@ -104,7 +104,7 @@ def check_error_page():
             if activity == "com.taobao.tao.welcome.Welcome":
                 find_farm_btn()
                 find_fertilizer_btn()
-            elif activity == "com.taobao.themis.container.app.TMSActivity":
+            elif activity == "com.taobao.themis.container.app.TMSActivity" and d(className="android.widget.Button", textMatches=r"施肥，肥料\d+，可施肥\d+次").exists:
                 try:
                     find_fertilizer_btn()
                 except Exception as e:

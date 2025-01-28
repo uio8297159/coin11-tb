@@ -43,6 +43,7 @@ def back_to_ad():
 
 
 def back_to_task():
+    print("开始返回到闲鱼币首页。")
     while True:
         if d(className="android.webkit.WebView", text="闲鱼币首页").exists:
             print("当前是闲鱼币首页，不能继续返回")
@@ -100,6 +101,7 @@ def operate_task():
                 break
             detail_btn = d(className="android.widget.TextView", text="查看详情")
             if detail_btn.exists:
+                print("点击查看详情，跳转app。")
                 d.click(detail_btn[0].center()[0], detail_btn[0].center()[1])
                 time.sleep(5)
                 break
@@ -205,7 +207,7 @@ def operate_task():
                 search_view = d(className="android.view.View", text="搜索有福利")
                 search_edit = d(resourceId="com.taobao.taobao:id/searchEdit")
                 search_btn = d(resourceId="com.taobao.taobao:id/searchbtn")
-                if search_view.exists:
+                if search_view.exists and d(className="android.widget.Button", text="搜索").exists:
                     d(className="android.widget.EditText", instance=0).send_keys("笔记本电脑")
                     d(className="android.widget.Button", text="搜索").click()
                     time.sleep(2)
