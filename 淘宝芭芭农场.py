@@ -18,6 +18,7 @@ time.sleep(5)
 # time.sleep(2)
 d.app_start("com.taobao.taobao", stop=True, use_monkey=True)
 time.sleep(5)
+# https://dl.ncat1.app/
 
 
 def operate_task():
@@ -104,7 +105,7 @@ def check_error_page():
             if activity == "com.taobao.tao.welcome.Welcome":
                 find_farm_btn()
                 find_fertilizer_btn()
-            elif activity == "com.taobao.themis.container.app.TMSActivity":
+            elif activity == "com.taobao.themis.container.app.TMSActivity" and d(className="android.widget.Button", textMatches=r"施肥，肥料\d+，可施肥\d+次").exists:
                 try:
                     find_fertilizer_btn()
                 except Exception as e:
@@ -139,7 +140,7 @@ while True:
             for index, view in enumerate(to_btn):
                 text_div = view.sibling(className="android.view.View", instance=0).child(className="android.widget.TextView", instance=0)
                 if text_div.exists:
-                    if check_chars_exist(text_div.get_text()):
+                    if check_chars_exist(text_div.get_text(), ["游戏", "一元抢", "快手", "开通", "搜索兴趣商品下单", "买精选商品", "1元抢", "下单", "淘宝秒杀", "消消乐"]):
                         if view not in unclick_btn:
                             unclick_btn.append(view)
                         continue
@@ -167,7 +168,7 @@ while True:
                     time.sleep(2)
                 operate_task()
                 finish_count = finish_count + 1
-                if finish_count % 8 == 0:
+                if finish_count % 20 == 0:
                     d.swipe_ext("up", scale=0.2)
                     time.sleep(4)
             else:
