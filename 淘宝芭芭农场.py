@@ -22,7 +22,8 @@ time.sleep(5)
 
 
 def operate_task():
-    is_task = d(className="android.webkit.WebView", text="芭芭农场").exists
+    package, activity = get_current_app(d)
+    is_task = d(className="android.webkit.WebView", text="芭芭农场").exists and package == "com.taobao.taobao"
     print(f"是否在任务页面:{is_task}")
     if is_task:
         return
