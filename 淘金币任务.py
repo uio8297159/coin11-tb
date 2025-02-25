@@ -31,6 +31,8 @@ time.sleep(3)
 
 
 def operate_task():
+    if d(className="android.widget.TextView", text="赚金币抵钱").exists or d(className="android.widget.TextView", text="今日累计奖励").exists:
+        return
     start_time = time.time()
     while True:
         if time.time() - start_time > 18:
@@ -66,6 +68,8 @@ def check_error_page():
         else:
             if activity == "com.taobao.tao.welcome.Welcome":
                 find_coin_btn()
+            else:
+                d.press("back")
 
 
 def find_coin_btn():
