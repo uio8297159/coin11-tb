@@ -91,7 +91,7 @@ if close_btn.exists:
     close_btn.click()
     time.sleep(3)
 find_coin_btn()
-earn_btn = d(className="android.widget.TextView", textContains="签到领金币")
+earn_btn = d(className="android.widget.TextView", textMatches="签到领金币|点击签到")
 if earn_btn.exists(timeout=4):
     earn_btn.click()
     time.sleep(5)
