@@ -30,8 +30,16 @@ ctx.start()
 time.sleep(3)
 
 
+def check_in_task():
+    package, _ = get_current_app(d)
+    if package == "com.taobao.taobao" and (d(className="android.widget.TextView", text="赚金币抵钱").exists or d(className="android.widget.TextView", text="今日累计奖励").exists):
+        return True
+    return False
+
+
 def operate_task():
     if d(className="android.widget.TextView", text="赚金币抵钱").exists or d(className="android.widget.TextView", text="今日累计奖励").exists:
+        print("当前在任务页面，没有执行任务。。。")
         return
     start_time = time.time()
     while True:
@@ -161,7 +169,7 @@ while True:
                 if check_chars_exist(task_name, other_app):
                     in_other_app = True
                 need_click_view.click()
-                time.sleep(2)
+                time.sleep(3.5)
                 search_view = d(className="android.view.View", text="搜索有福利")
                 search_edit = d(resourceId="com.taobao.taobao:id/searchEdit")
                 search_btn = d(resourceId="com.taobao.taobao:id/searchbtn")
