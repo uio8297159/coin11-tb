@@ -38,7 +38,7 @@ def check_in_task():
 
 
 def operate_task():
-    if d(className="android.widget.TextView", text="赚金币抵钱").exists or d(className="android.widget.TextView", text="今日累计奖励").exists:
+    if check_in_task():
         print("当前在任务页面，没有执行任务。。。")
         return
     start_time = time.time()
@@ -52,7 +52,7 @@ def operate_task():
             time.sleep(3)
     try_count = 0
     while True:
-        if d(className="android.widget.TextView", text="赚金币抵钱").exists or d(className="android.widget.TextView", text="今日累计奖励").exists:
+        if check_in_task():
             print("当前是任务列表画面，不能继续返回")
             # d.swipe_ext(Direction.FORWARD)
             break
@@ -68,7 +68,7 @@ def operate_task():
 def check_error_page():
     while True:
         time.sleep(3)
-        if d(className="android.widget.TextView", text="赚金币抵钱").exists or d(className="android.widget.TextView", text="今日累计奖励").exists:
+        if check_in_task():
             break
         package, activity = get_current_app(d)
         if package != "com.taobao.taobao":
