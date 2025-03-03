@@ -38,9 +38,14 @@ def check_in_task():
 
 
 def operate_task():
-    if check_in_task():
-        print("当前在任务页面，没有执行任务。。。")
-        return
+    check_count = 3
+    while True:
+        if check_in_task():
+            print(f"检查次数：{check_count}当前在任务页面，没有执行任务。。。")
+            check_count -= 1
+            time.sleep(2)
+        else:
+            break
     start_time = time.time()
     while True:
         if time.time() - start_time > 18:
