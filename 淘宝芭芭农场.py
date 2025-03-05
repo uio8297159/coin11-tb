@@ -21,12 +21,24 @@ time.sleep(5)
 # https://dl.ncat1.app/
 
 
-def operate_task():
+def check_in_task():
     package_name, _ = get_current_app(d)
-    is_task = d(className="android.webkit.WebView", text="芭芭农场").exists and package_name == "com.taobao.taobao"
-    print(f"是否在任务页面:{is_task}")
-    if is_task:
-        return
+    if d(className="android.webkit.WebView", text="芭芭农场").exists and package_name == "com.taobao.taobao":
+        return True
+    return False
+
+
+def operate_task():
+    check_count = 3
+    while check_count >= 0:
+        if check_in_task():
+            print(f"检查次数：{check_count}当前在任务页面，没有执行任务。。。")
+            check_count -= 1
+            time.sleep(2)
+            if check_count == 0:
+                return
+        else:
+            break
     start_time = time.time()
     while True:
         if time.time() - start_time > 16:
@@ -39,7 +51,7 @@ def operate_task():
     try_count = 0
     while True:
         package_name, activity_name = get_current_app(d)
-        if package_name == "com.taobao.taobao" and d(text="肥料明细").exists:
+        if check_in_task():
             print("当前是任务列表画面，不能继续返回")
             break
         else:
