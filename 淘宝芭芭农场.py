@@ -32,13 +32,10 @@ def operate_task():
     check_count = 3
     while check_count >= 0:
         if check_in_task():
-            print(f"检查次数：{check_count}当前在任务页面，没有执行任务。。。")
-            check_count -= 1
-            time.sleep(2)
-            if check_count == 0:
-                return
-        else:
             break
+        print(f"检查次数：{check_count}当前在任务页面，没有执行任务。。。")
+        check_count -= 1
+        time.sleep(2)
     start_time = time.time()
     while True:
         if time.time() - start_time > 16:
