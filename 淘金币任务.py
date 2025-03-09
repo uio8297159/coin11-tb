@@ -44,6 +44,8 @@ def operate_task():
             break
         print(f"检查次数：{check_count}当前在任务页面，没有执行任务。。。")
         check_count -= 1
+        if check_count <= 0:
+            return
         time.sleep(2)
     start_time = time.time()
     while True:
