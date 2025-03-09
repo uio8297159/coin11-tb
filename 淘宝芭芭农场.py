@@ -31,7 +31,7 @@ def check_in_task():
 def operate_task():
     check_count = 3
     while check_count >= 0:
-        if check_in_task():
+        if not check_in_task():
             break
         print(f"检查次数：{check_count}当前在任务页面，没有执行任务。。。")
         check_count -= 1
