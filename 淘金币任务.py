@@ -9,6 +9,7 @@ have_clicked = dict()
 is_end = False
 error_count = 0
 in_other_app = False
+time1 = time.time()
 d = u2.connect()
 d.shell("adb kill-server && adb start-server")
 time.sleep(5)
@@ -40,14 +41,13 @@ def check_in_task():
 def operate_task():
     check_count = 3
     while check_count >= 0:
-        if check_in_task():
-            print(f"检查次数：{check_count}当前在任务页面，没有执行任务。。。")
-            check_count -= 1
-            time.sleep(2)
-            if check_count == 0:
-                return
-        else:
+        if not check_in_task():
             break
+        print(f"检查次数：{check_count}当前在任务页面，没有执行任务。。。")
+        check_count -= 1
+        if check_count <= 0:
+            return
+        time.sleep(2)
     start_time = time.time()
     while True:
         if time.time() - start_time > 18:
@@ -205,3 +205,5 @@ ctx.close()
 print(f"共自动化完成{finish_count}个任务")
 d.shell("settings put system accelerometer_rotation 0")
 print("关闭手机自动旋转")
+time2 = time.time()
+print(f"共耗时: {int(time2 - time1)}秒")

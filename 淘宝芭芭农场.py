@@ -31,14 +31,13 @@ def check_in_task():
 def operate_task():
     check_count = 3
     while check_count >= 0:
-        if check_in_task():
-            print(f"检查次数：{check_count}当前在任务页面，没有执行任务。。。")
-            check_count -= 1
-            time.sleep(2)
-            if check_count == 0:
-                return
-        else:
+        if not check_in_task():
             break
+        print(f"检查次数：{check_count}当前在任务页面，没有执行任务。。。")
+        check_count -= 1
+        if check_count <= 0:
+            return
+        time.sleep(2)
     start_time = time.time()
     while True:
         if time.time() - start_time > 16:
@@ -153,7 +152,7 @@ while True:
             for index, view in enumerate(to_btn):
                 text_div = view.sibling(className="android.view.View", instance=0).child(className="android.widget.TextView", instance=0)
                 if text_div.exists:
-                    if check_chars_exist(text_div.get_text(), ["游戏", "一元抢", "快手", "开通", "搜索兴趣商品下单", "买精选商品", "1元抢", "下单", "淘宝秒杀", "消消乐"]):
+                    if check_chars_exist(text_div.get_text(), ["游戏", "一元抢", "快手", "开通", "搜索兴趣商品下单", "买精选商品", "1元抢", "下单", "淘宝秒杀", "消消乐", "3元3件", "中国移动"]):
                         if view not in unclick_btn:
                             unclick_btn.append(view)
                         continue
