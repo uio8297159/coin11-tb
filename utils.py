@@ -68,3 +68,4 @@ def find_text_position(image, text):
             end_index = start_index + len(text)
             return start_index, end_index
     return None
+

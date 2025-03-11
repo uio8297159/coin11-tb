@@ -20,11 +20,6 @@ finish_count = 0
 
 def click_earn():
     while True:
-        re_btn = d(className="android.widget.TextView", resourceId="dailyRewardBox", textContains="领取酬金", clickable=True)
-        print(f"领取酬金按钮是否存在:{re_btn.exists}")
-        if re_btn.exists:
-            d.click(re_btn[0].center()[0], re_btn[0].center()[1])
-            time.sleep(3)
         throw_btn = d(className="android.view.View", resourceId="mapDiceBtn")
         if throw_btn.exists:
             d.click(throw_btn[0].bounds()[2] + 50, throw_btn[0].center()[1] + 30)
@@ -119,10 +114,6 @@ def operate_task():
     else:
         if d(className="android.widget.TextView", textMatches=r"继续浏览\d+s获1个骰子").exists:
             print("首页滑动，开始模拟滑动")
-            # d.touch.down(screen_width * 0.5, screen_height * 0.8)
-            # time.sleep(0.5)
-            # d.touch.move(screen_width * 0.5, screen_height * 0.5)
-            # d.touch.up(screen_width * 0.5, screen_height * 0.5)
             start_time = time.time()
             while True:
                 if time.time() - start_time > 15:
@@ -132,6 +123,8 @@ def operate_task():
             d(scrollable=True).fling.vert.toBeginning(max_swipes=1000)
             time.sleep(2)
             click_earn()
+        elif d(className="android.webkit.WebView", text="闲鱼币首页").exists:
+            return
         elif d(className="android.widget.TextView", text="我的夺宝").exists:
             print("我的夺宝页面...")
             treasures_btn = d(className="android.widget.TextView", text="我的夺宝")
@@ -227,7 +220,7 @@ def operate_task():
                     time.sleep(1)
                     d.swipe_ext(u2.Direction.BACKWARD)
                     time.sleep(1)
-                    if time.time() - start_time > 25:
+                    if time.time() - start_time > 28:
                         break
                 print("滑动完毕，开始退出")
                 back_to_task()
@@ -240,9 +233,11 @@ while True:
     sign_btn2 = d(className="android.widget.ImageView", resourceId="com.taobao.idlefish:id/icon_entry")
     print(f"查找签到按钮，存在:{sign_btn1.exists}, {sign_btn2.exists}")
     if sign_btn1.exists:
-        d.click(sign_btn1[0].center()[0], sign_btn1[0].center()[1])
+        d.click(sign_btn1.center()[0], sign_btn1.center()[1])
+        time.sleep(2)
     elif sign_btn2.exists:
-        d.click(sign_btn2[0].center()[0], sign_btn2[0].center()[1])
+        d.click(sign_btn2.center()[0], sign_btn2.center()[1])
+        time.sleep(2)
     if d(className="android.webkit.WebView", text="闲鱼币首页").exists:
         break
     time.sleep(1)
@@ -292,12 +287,61 @@ while True:
                 time.sleep(8 if "视频" in task_name else 3)
                 operate_task()
             else:
-                error_count += 1
                 print("未找到可点击按钮", error_count)
-                if error_count > 3:
-                    break
+                break
     except Exception as e:
-        print(e)
-        continue
+        print("未找到可点击按钮", error_count)
+        break
 print(f"共自动化完成{finish_count}个任务")
+task_close_btn = d(resourceId="taskWrap", className="android.view.View").child(className="android.widget.TextView", index=0)
+if task_close_btn.exists:
+    print("点击关闭任务列表")
+    d.click(task_close_btn.center()[0], task_close_btn.center()[1])
+    time.sleep(1)
+receive_btn2 = d(className="android.widget.TextView", resourceId="dailyRewardBox")
+if receive_btn2.exists:
+    print("点击领取奖励")
+    d.click(receive_btn2[0].center()[0], receive_btn2[0].center()[1])
+    time.sleep(2)
+throw_btn = d(className="android.view.View", resourceId="mapDiceBtn")
+while True:
+    print("开始摇骰子...")
+    count_btn = throw_btn.child(className="android.widget.TextView", index=0)
+    if count_btn.exists:
+        print(f"摇骰子次数：{count_btn.get_text()}")
+        numbers = filter(str.isdigit, count_btn.get_text())
+        if len(numbers) <= 0:
+            break
+        count = int(''.join(numbers))
+        if count > 0:
+            d.click(throw_btn.center()[0], throw_btn.center()[1])
+            time.sleep(5)
+            draw_btn = d(className="android.widget.TextView", text="开始抽奖")
+            if draw_btn.exists:
+                d.click(draw_btn.center()[0], draw_btn.center()[1])
+                time.sleep(10)
+                in_btn = d(className="android.widget.TextView", text="收下礼物")
+                if in_btn.exists:
+                    d.click(in_btn.center()[0], in_btn.center()[1])
+                    time.sleep(3)
+                continue
+            screen_image = d.screenshot(format='opencv')
+            pt1 = find_button(screen_image, "./img/fish_advance.png")
+            if pt1:
+                d.click(int(pt1[0]) + 50, int(pt1[1]) + 20)
+                time.sleep(3)
+                continue
+            pt2 = find_button(screen_image, "./img/fish_continue.png")
+            if pt2:
+                d.click(int(pt2[0]) + 50, int(pt2[1]) + 20)
+                time.sleep(3)
+                continue
+            pt3 = find_button(screen_image, "./img/fish_continue2.png")
+            if pt3:
+                d.click(int(pt3[0]) + 50, int(pt3[1]) + 20)
+                time.sleep(3)
+                continue
+    else:
+        break
+    time.sleep(2)
 ctx.stop()
