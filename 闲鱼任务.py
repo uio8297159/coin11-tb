@@ -31,6 +31,7 @@ def click_earn():
             time.sleep(5)
             if d(className="android.view.View", resourceId="taskWrap").exists:
                 break
+        time.sleep(2)
 
 
 def back_to_ad():
@@ -49,7 +50,11 @@ def back_to_task():
             print("当前是闲鱼币首页，不能继续返回")
             break
         else:
-            d.press("back")
+            pt = find_button(d.screenshot(format='opencv'), "./img/fish_back.png", (0, 0, 100, 200))
+            if pt:
+                d.click(int(pt[0]) + 8, int(pt[1]) + 10)
+            else:
+                d.press("back")
             time.sleep(0.1)
 
 
@@ -112,17 +117,17 @@ def operate_task():
             time.sleep(3)
         back_to_task()
     else:
-        if d(className="android.view.View", resourceId="mapDiceBtn").exists and not d(className="android.view.View", resourceId="taskWrap").exists:
+        if d(className="android.widget.TextView", textMatches=r"继续浏览\d+s获1个骰子").exists:
             print("首页滑动，开始模拟滑动")
-            d.touch.down(screen_width * 0.5, screen_height * 0.8)
-            time.sleep(0.5)
-            d.touch.move(screen_width * 0.5, screen_height * 0.2)
-            d.touch.up(screen_width * 0.5, screen_height * 0.1)
+            # d.touch.down(screen_width * 0.5, screen_height * 0.8)
+            # time.sleep(0.5)
+            # d.touch.move(screen_width * 0.5, screen_height * 0.5)
+            # d.touch.up(screen_width * 0.5, screen_height * 0.5)
             start_time = time.time()
             while True:
-                if time.time() - start_time > 20:
+                if time.time() - start_time > 15:
                     break
-                d.swipe_ext("up", scale=0.5)
+                d.swipe_ext("up", scale=0.2)
                 time.sleep(1)
             d(scrollable=True).fling.vert.toBeginning(max_swipes=1000)
             time.sleep(2)
@@ -231,25 +236,19 @@ def operate_task():
 time.sleep(5)
 ctx.wait_stable()
 while True:
-    _, activity_name = get_current_app(d)
-    if activity_name == "com.taobao.idlefish.maincontainer.activity.MainActivity":
-        sign_btn1 = d(resourceId="com.taobao.idlefish:id/icon_entry_lottie", className="android.widget.ImageView", clickable=True)
-        sign_btn2 = d(className="android.widget.ImageView", resourceId="com.taobao.idlefish:id/icon_entry")
-        print(f"查找签到按钮，存在:{sign_btn1.exists}, {sign_btn2.exists}")
-        if sign_btn1.exists:
-            d.double_click(sign_btn1[0].center()[0], sign_btn1[0].center()[1])
-            time.sleep(4)
-        elif sign_btn2.exists:
-            d.double_click(sign_btn2[0].center()[0], sign_btn2[0].center()[1])
-            time.sleep(4)
-    elif activity_name == "com.taobao.idlefish.webview.WebHybridActivity":
-        if d(className="android.view.View", resourceId="mapDiceBtn").exists:
-            break
-    else:
-        d.app_start("com.taobao.idlefish", stop=True)
-    time.sleep(4)
-time.sleep(3)
-click_earn()
+    sign_btn1 = d(resourceId="com.taobao.idlefish:id/icon_entry_lottie", className="android.widget.ImageView", clickable=True)
+    sign_btn2 = d(className="android.widget.ImageView", resourceId="com.taobao.idlefish:id/icon_entry")
+    print(f"查找签到按钮，存在:{sign_btn1.exists}, {sign_btn2.exists}")
+    if sign_btn1.exists:
+        d.click(sign_btn1[0].center()[0], sign_btn1[0].center()[1])
+    elif sign_btn2.exists:
+        d.click(sign_btn2[0].center()[0], sign_btn2[0].center()[1])
+    if d(className="android.webkit.WebView", text="闲鱼币首页").exists:
+        break
+    time.sleep(1)
+time.sleep(6)
+if not d(className="android.view.View", resourceId="taskWrap").exists:
+    click_earn()
 while True:
     try:
         print("正在查找按钮...")

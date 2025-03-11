@@ -35,8 +35,12 @@ def fish_not_click(text, chars=None):
     return False
 
 
-def find_button(image, btn_path):
+def find_button(image, btn_path, region=None):
     template = cv2.imread(btn_path)
+    # 如果指定了区域，裁剪图像
+    if region is not None:
+        x, y, w_region, h_region = region
+        image = image[y:y + h_region, x:x + w_region]
     # 转换为灰度图像
     screenshot_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     template_gray = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)
