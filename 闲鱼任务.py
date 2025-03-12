@@ -350,4 +350,5 @@ while True:
     else:
         break
     time.sleep(2)
+print("任务完成。。。")
 ctx.stop()
