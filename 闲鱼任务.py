@@ -320,10 +320,16 @@ while True:
             if draw_btn.exists:
                 d.click(draw_btn.center()[0], draw_btn.center()[1])
                 time.sleep(10)
-                in_btn = d(className="android.widget.TextView", text="收下礼物")
-                if in_btn.exists:
-                    d.click(in_btn.center()[0], in_btn.center()[1])
-                    time.sleep(3)
+                continue
+            scratch_btn = d(className="android.widget.TextView", text="开始刮奖")
+            if scratch_btn.exists:
+                d.click(scratch_btn.center()[0], scratch_btn.center()[1])
+                time.sleep(15)
+                continue
+            in_btn = d(className="android.widget.TextView", text="收下礼物")
+            if in_btn.exists:
+                d.click(in_btn.center()[0], in_btn.center()[1])
+                time.sleep(3)
                 continue
             screen_image = d.screenshot(format='opencv')
             pt1 = find_button(screen_image, "./img/fish_advance.png")
