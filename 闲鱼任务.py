@@ -1,4 +1,5 @@
 import time
+import re
 
 import uiautomator2 as u2
 from utils import get_current_app, fish_not_click, find_button, find_text_position
@@ -45,7 +46,7 @@ def back_to_task():
             print("当前是闲鱼币首页，不能继续返回")
             break
         else:
-            pt = find_button(d.screenshot(format='opencv'), "./img/fish_back.png", (0, 0, 100, 200))
+            pt = find_button(d.screenshot(format='opencv'), "./img/fish_back.png", (0, 0, 300, 500))
             if pt:
                 d.click(int(pt[0]) + 8, int(pt[1]) + 10)
             else:
@@ -258,16 +259,12 @@ while True:
             receive_btn.click()
             print("点击领取奖励")
             time.sleep(2)
-            finish_count = finish_count + 1
-            if finish_count % 5 == 0:
-                d.swipe_ext("up", scale=0.2)
-                time.sleep(4)
             continue
         to_btn = d(className="android.widget.TextView", text="去完成", clickable=True)
         if to_btn.exists:
             need_click_view = None
             task_name = None
-            for btn in to_btn:
+            for btn in reversed(to_btn):
                 print("开始识别...")
                 screen_shot = d.screenshot()
                 cropped_rect = (200, btn.bounds()[1] - 50, btn.bounds()[0] - 50, btn.bounds()[1] + 30)
@@ -290,6 +287,8 @@ while True:
             else:
                 print("未找到可点击按钮", error_count)
                 break
+        else:
+            break
     except Exception as e:
         print("未找到可点击按钮", error_count)
         break
@@ -310,10 +309,10 @@ while True:
     count_btn = throw_btn.child(className="android.widget.TextView", index=0)
     if count_btn.exists:
         print(f"摇骰子次数：{count_btn.get_text()}")
-        numbers = filter(str.isdigit, count_btn.get_text())
+        numbers = re.findall(r'\d+', count_btn.get_text())
         if len(numbers) <= 0:
             break
-        count = int(''.join(numbers))
+        count = int(numbers[0])
         if count > 0:
             d.click(throw_btn.center()[0], throw_btn.center()[1])
             time.sleep(5)

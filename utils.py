@@ -69,3 +69,7 @@ def find_text_position(image, text):
             return start_index, end_index
     return None
 
+
+# img = cv2.imread("./img/screenshot.png")
+# pt = find_button(img, "./img/fish_back.png", (0, 0, 300, 500))
+# print(pt)
