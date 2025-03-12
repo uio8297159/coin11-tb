@@ -116,10 +116,10 @@ def operate_task():
             print("首页滑动，开始模拟滑动")
             start_time = time.time()
             while True:
-                if time.time() - start_time > 15:
+                if time.time() - start_time > 24:
                     break
-                d.swipe_ext("up", scale=0.2)
-                time.sleep(1)
+                d.swipe_ext("up", scale=0.4)
+                time.sleep(0.5)
             d(scrollable=True).fling.vert.toBeginning(max_swipes=1000)
             time.sleep(2)
             click_earn()
@@ -213,6 +213,7 @@ def operate_task():
                     search_edit.send_keys("笔记本电脑")
                     search_btn.click()
                     time.sleep(2)
+                time.sleep(3)
                 start_time = time.time()
                 print("开始上下滑动")
                 while True:
