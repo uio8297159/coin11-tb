@@ -40,7 +40,7 @@ def operate_task():
         time.sleep(2)
     start_time = time.time()
     while True:
-        if time.time() - start_time > 16:
+        if time.time() - start_time > 18:
             break
         if not in_other_app:
             d.swipe_ext(Direction.FORWARD)

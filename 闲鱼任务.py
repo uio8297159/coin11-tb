@@ -48,7 +48,7 @@ def back_to_task():
         else:
             pt = find_button(d.screenshot(format='opencv'), "./img/fish_back.png", (0, 0, 300, 500))
             if pt:
-                d.click(int(pt[0]) + 8, int(pt[1]) + 10)
+                d.click(int(pt[0]) + 5, int(pt[1]) + 5)
             else:
                 d.press("back")
             time.sleep(0.1)
@@ -215,14 +215,14 @@ def operate_task():
                     search_btn.click()
                     time.sleep(2)
                 time.sleep(3)
-                start_time = time.time()
                 print("开始上下滑动")
+                start_time = time.time()
                 while True:
                     d.swipe_ext(u2.Direction.FORWARD)
                     time.sleep(1)
                     d.swipe_ext(u2.Direction.BACKWARD)
                     time.sleep(1)
-                    if time.time() - start_time > 28:
+                    if time.time() - start_time > 30:
                         break
                 print("滑动完毕，开始退出")
                 back_to_task()
@@ -258,13 +258,16 @@ while True:
         if receive_btn.exists:
             receive_btn.click()
             print("点击领取奖励")
+            finish_count += 1
             time.sleep(2)
             continue
         to_btn = d(className="android.widget.TextView", text="去完成", clickable=True)
         if to_btn.exists:
             need_click_view = None
             task_name = None
-            for btn in reversed(to_btn):
+            if finish_count > 5:
+                to_btn = reversed(to_btn)
+            for btn in to_btn:
                 print("开始识别...")
                 screen_shot = d.screenshot()
                 cropped_rect = (200, btn.bounds()[1] - 50, btn.bounds()[0] - 50, btn.bounds()[1] + 30)
@@ -290,8 +293,8 @@ while True:
         else:
             break
     except Exception as e:
-        print("未找到可点击按钮", error_count)
-        break
+        print("报错", e)
+        continue
 print(f"共自动化完成{finish_count}个任务")
 task_close_btn = d(resourceId="taskWrap", className="android.view.View").child(className="android.widget.TextView", index=0)
 if task_close_btn.exists:
@@ -300,9 +303,12 @@ if task_close_btn.exists:
     time.sleep(1)
 receive_btn2 = d(className="android.widget.TextView", resourceId="dailyRewardBox")
 if receive_btn2.exists:
-    print("点击领取奖励")
-    d.click(receive_btn2[0].center()[0], receive_btn2[0].center()[1])
-    time.sleep(2)
+    print("点击领取收益")
+    click_count = 2
+    while click_count >= 0:
+        d.click(receive_btn2.center()[0], receive_btn2.bounds()[3] - 10)
+        click_count -= 1
+        time.sleep(2)
 throw_btn = d(className="android.view.View", resourceId="mapDiceBtn")
 while True:
     print("开始摇骰子...")
