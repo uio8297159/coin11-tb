@@ -70,6 +70,17 @@ def find_text_position(image, text):
     return None
 
 
+# 判断一个字符是否为中文字符
+def is_chinese(char):
+    return '\u4e00' <= char <= '\u9fff'
+
+
+def majority_chinese(text):
+    if not text:
+        return False
+    chinese_count = sum(1 for char in text if is_chinese(char))
+    return chinese_count > len(text) / 2
+
 # img = cv2.imread("./img/screenshot.png")
 # pt = find_button(img, "./img/fish_back.png", (0, 0, 300, 500))
 # print(pt)

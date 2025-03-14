@@ -49,11 +49,11 @@ def operate_task():
             time.sleep(3)
     try_count = 0
     while True:
-        package_name, activity_name = get_current_app(d)
         if check_in_task():
             print("当前是任务列表画面，不能继续返回")
             break
         else:
+            package_name, activity_name = get_current_app(d)
             # if package_name == "com.miui.home":
             #     d.app_start("com.taobao.taobao")
             #     break

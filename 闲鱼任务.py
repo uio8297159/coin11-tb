@@ -2,7 +2,7 @@ import time
 import re
 
 import uiautomator2 as u2
-from utils import get_current_app, fish_not_click, find_button, find_text_position
+from utils import get_current_app, fish_not_click, find_button, majority_chinese
 import ddddocr
 
 d = u2.connect()
@@ -21,12 +21,12 @@ finish_count = 0
 
 def click_earn():
     while True:
-        throw_btn = d(className="android.view.View", resourceId="mapDiceBtn")
-        if throw_btn.exists:
-            d.click(throw_btn[0].bounds()[2] + 50, throw_btn[0].center()[1] + 30)
+        if d(className="android.view.View", resourceId="taskWrap").exists:
+            break
+        throw_btn1 = d(className="android.view.View", resourceId="mapDiceBtn")
+        if throw_btn1.exists:
+            d.click(throw_btn1.bounds()[2] + 50, throw_btn1.center()[1] + 30)
             time.sleep(5)
-            if d(className="android.view.View", resourceId="taskWrap").exists:
-                break
         time.sleep(2)
 
 
@@ -39,11 +39,14 @@ def back_to_ad():
         time.sleep(0.2)
 
 
-def back_to_task():
+def back_to_task(to_treasure=False):
     print("开始返回到闲鱼币首页。")
     while True:
         if d(className="android.webkit.WebView", text="闲鱼币首页").exists:
             print("当前是闲鱼币首页，不能继续返回")
+            break
+        elif to_treasure and d(className="android.widget.TextView", text="我的夺宝").exists:
+            print("当前是我的夺宝页面，不能继续返回")
             break
         else:
             pt = find_button(d.screenshot(format='opencv'), "./img/fish_back.png", (0, 0, 300, 500))
@@ -54,7 +57,17 @@ def back_to_task():
             time.sleep(0.1)
 
 
-def operate_task():
+def check_popup():
+    screen_image1 = d.screenshot(format='opencv')
+    pt11 = find_button(screen_image1, "./img/fish_close.png")
+    if pt11:
+        d.click(int(pt11[0]) + 15, int(pt11[1]) + 15)
+    pt22 = find_button(screen_image1, "./img/fish_close2.png")
+    if pt22:
+        d.click(int(pt11[0]) + 15, int(pt11[1]) + 15)
+
+
+def operate_task(to_treasure=False):
     _, activity = get_current_app(d)
     if activity == "com.taobao.idlefish.ads.ylh.YlhPortraitADActivity":
         print("第一种情况：去微信看短剧或点击广告看详情")
@@ -127,20 +140,20 @@ def operate_task():
         elif d(className="android.webkit.WebView", text="闲鱼币首页").exists:
             return
         elif d(className="android.widget.TextView", text="我的夺宝").exists:
-            print("我的夺宝页面...")
+            print("现金夺宝页面...")
             treasures_btn = d(className="android.widget.TextView", text="我的夺宝")
             if treasures_btn.exists:
-                d.click(screen_width / 2, treasures_btn[0].bounds()[3] + 20)
-                time.sleep(2)
+                d.click(screen_width / 2, treasures_btn[0].bounds()[3] + 50)
+                time.sleep(5)
                 red_btn = d(className="android.widget.TextView", textMatches=r"获得\d+个红包.*")
                 if red_btn.exists:
-                    d.click(red_btn[0].bounds()[2] - 20, red_btn[0].center()[1])
-                    time.sleep(3)
+                    d.click(red_btn[0].bounds()[2] - 50, red_btn[0].center()[1])
+                    time.sleep(5)
                     pt = find_button(d.screenshot(format='opencv'), "./img/fish_open.png")
-                    print(f"查找到一键开启按钮结果：{pt}")
                     if pt:
-                        d.click(int(pt[0]) + 5, int(pt[1]) + 5)
-                        time.sleep(2)
+                        d.click(int(pt[0]) + 40, int(pt[1]) + 15)
+                        print("点击一键开启")
+                        time.sleep(5)
                     while True:
                         if d(className="android.widget.TextView", text="我的夺宝").exists:
                             break
@@ -225,7 +238,7 @@ def operate_task():
                     if time.time() - start_time > 30:
                         break
                 print("滑动完毕，开始退出")
-                back_to_task()
+                back_to_task(to_treasure)
 
 
 time.sleep(5)
@@ -241,15 +254,16 @@ while True:
         d.click(sign_btn2.center()[0], sign_btn2.center()[1])
         time.sleep(2)
     if d(className="android.webkit.WebView", text="闲鱼币首页").exists:
+        print("已经进入闲鱼页面")
         break
     time.sleep(1)
 time.sleep(6)
-if not d(className="android.view.View", resourceId="taskWrap").exists:
-    click_earn()
+click_earn()
 while True:
     try:
         print("正在查找按钮...")
         time.sleep(4)
+        check_popup()
         sign_btn = d(className="android.widget.TextView", text="签到", clickable=True)
         if sign_btn.exists:
             sign_btn.click()
@@ -274,12 +288,14 @@ while True:
                 cropped_image = screen_shot.crop(cropped_rect)
                 task_name = ocr.classification(cropped_image)
                 print(f"识别成功:{task_name}")
+                if not majority_chinese(task_name):
+                    continue
                 if fish_not_click(task_name):
                     continue
                 need_click_view = btn
                 break
             if need_click_view and task_name:
-                d.double_click(need_click_view.center()[0], need_click_view.center()[1])
+                d.click(need_click_view.center()[0], need_click_view.center()[1])
                 print(f"点击按钮{task_name}")
                 if have_clicked.get(task_name) is None:
                     have_clicked[task_name] = 1
