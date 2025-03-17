@@ -26,7 +26,6 @@ def operate_task():
     while True:
         if d(text="做任务集肥料").exists:
             print("当前是任务列表画面，不能继续返回")
-            # d.swipe_ext(Direction.FORWARD)
             break
         else:
             d.press("back")
@@ -87,10 +86,6 @@ while True:
                     d(className="android.widget.Button", text="搜索").click()
                     time.sleep(2)
                 operate_task()
-                finish_count = finish_count + 1
-                if finish_count % 4 == 0:
-                    d.swipe_ext("up", scale=0.4)
-                    time.sleep(4)
             else:
                 error_count += 1
                 print("未找到可点击按钮", error_count)

@@ -343,6 +343,16 @@ while True:
                 d.click(draw_btn.center()[0], draw_btn.center()[1])
                 time.sleep(10)
                 continue
+            receive_btn3 = d(className="android.widget.TextView", text="领取奖励")
+            if receive_btn3.exists:
+                d.click(receive_btn3.center()[0], receive_btn3.center()[1])
+                time.sleep(3)
+                continue
+            know_btn = d(className="android.widget.TextView", text="我知道了")
+            if know_btn.exists:
+                d.click(know_btn.center()[0], know_btn.center()[1])
+                time.sleep(3)
+                continue
             scratch_btn = d(className="android.widget.TextView", text="开始刮奖")
             if scratch_btn.exists:
                 d.click(scratch_btn.center()[0], scratch_btn.center()[1])
@@ -366,6 +376,11 @@ while True:
                 continue
             pt3 = find_button(screen_image, "./img/fish_continue2.png")
             if pt3:
+                d.click(int(pt3[0]) + 50, int(pt3[1]) + 20)
+                time.sleep(3)
+                continue
+            pt4 = find_button(screen_image, "./img/fish_prize.png")
+            if pt4:
                 d.click(int(pt3[0]) + 50, int(pt3[1]) + 20)
                 time.sleep(3)
                 continue
