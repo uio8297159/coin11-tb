@@ -384,8 +384,13 @@ while True:
                 continue
             pt4 = find_button(screen_image, "./img/fish_prize.png")
             if pt4:
-                d.click(int(pt3[0]) + 50, int(pt3[1]) + 20)
+                d.click(int(pt3[0]) + 100, int(pt3[1]) + 80)
                 time.sleep(3)
+                continue
+            pt5 = find_button(screen_image, "./img/fish_swing.png")
+            if pt5:
+                d.click(int(pt5[0]) + 50, int(pt5[1]) + 50)
+                time.sleep(10)
                 continue
     else:
         break
