@@ -257,25 +257,25 @@ while True:
         print("已经进入闲鱼页面")
         break
     time.sleep(1)
-time.sleep(6)
+time.sleep(10)
 click_earn()
 while True:
     try:
         print("正在查找按钮...")
         time.sleep(4)
         check_popup()
-        sign_btn = d(className="android.widget.TextView", text="签到", clickable=True)
+        sign_btn = d(className="android.widget.TextView", text="签到")
         if sign_btn.exists:
-            sign_btn.click()
+            d.click(sign_btn.center()[0], sign_btn.center()[1])
             time.sleep(4)
-        receive_btn = d(className="android.widget.TextView", text="领取奖励", clickable=True)
+        receive_btn = d(className="android.widget.TextView", text="领取奖励")
         if receive_btn.exists:
-            receive_btn.click()
+            d.click(receive_btn.center()[0], receive_btn.center()[1])
             print("点击领取奖励")
             finish_count += 1
             time.sleep(2)
             continue
-        to_btn = d(className="android.widget.TextView", text="去完成", clickable=True)
+        to_btn = d(className="android.widget.TextView", text="去完成")
         if to_btn.exists:
             need_click_view = None
             task_name = None
