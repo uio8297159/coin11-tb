@@ -41,6 +41,7 @@ def back_to_ad():
 
 def back_to_task(to_treasure=False):
     print("开始返回到闲鱼币首页。")
+    try_count = 0
     while True:
         if d(className="android.webkit.WebView", text="闲鱼币首页").exists:
             print("当前是闲鱼币首页，不能继续返回")
@@ -50,8 +51,10 @@ def back_to_task(to_treasure=False):
             break
         else:
             pt = find_button(d.screenshot(format='opencv'), "./img/fish_back.png", (0, 0, 300, 500))
-            if pt:
-                d.click(int(pt[0]) + 5, int(pt[1]) + 5)
+            if pt and try_count <= 2:
+                print("点击后退按钮, ", int(pt[0]) + 15, int(pt[1]) + 25)
+                d.click(int(pt[0]) + 15, int(pt[1]) + 25)
+                try_count += 1
             else:
                 d.press("back")
             time.sleep(0.1)
