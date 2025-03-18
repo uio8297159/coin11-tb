@@ -163,7 +163,7 @@ while True:
                             unclick_btn.append(view)
                         continue
                     if task_name in have_clicked:
-                        if have_clicked[task_name] > 2:
+                        if have_clicked[task_name] >= 2:
                             continue
                     need_click_index = index
                     need_click_view = view
