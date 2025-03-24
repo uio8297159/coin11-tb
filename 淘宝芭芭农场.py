@@ -66,6 +66,9 @@ def operate_task():
             try_count += 1
             time.sleep(0.2)
             if try_count > 10:
+                if package_name != "com.taobao.taobao":
+                    d.app_start("com.taobao.taobao", stop=False)
+                    time.sleep(10)
                 break
     check_error_page()
 

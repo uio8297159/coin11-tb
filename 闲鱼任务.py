@@ -261,6 +261,7 @@ while True:
         break
     time.sleep(1)
 time.sleep(10)
+check_popup()
 click_earn()
 while True:
     try:
