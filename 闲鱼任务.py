@@ -261,6 +261,7 @@ while True:
         break
     time.sleep(1)
 time.sleep(10)
+check_popup()
 click_earn()
 while True:
     try:
@@ -294,6 +295,8 @@ while True:
                 if not majority_chinese(task_name):
                     continue
                 if fish_not_click(task_name):
+                    continue
+                if have_clicked[task_name] >= 2:
                     continue
                 need_click_view = btn
                 break
