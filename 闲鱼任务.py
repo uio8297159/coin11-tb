@@ -296,6 +296,8 @@ while True:
                     continue
                 if fish_not_click(task_name):
                     continue
+                if have_clicked[task_name] >= 2:
+                    continue
                 need_click_view = btn
                 break
             if need_click_view and task_name:
