@@ -263,6 +263,8 @@ while True:
 time.sleep(10)
 check_popup()
 click_earn()
+swipe_count = True
+find_count = 0
 while True:
     try:
         print("正在查找按钮...")
@@ -277,15 +279,18 @@ while True:
             d.click(receive_btn.center()[0], receive_btn.center()[1])
             print("点击领取奖励")
             finish_count += 1
+            find_count = 5
             time.sleep(2)
             continue
-        to_btn = d(className="android.widget.TextView", text="去完成")
+        to_btn = d(className="android.widget.TextView", text="去完成", )
         if to_btn.exists:
             need_click_view = None
             task_name = None
             if finish_count > 5:
                 to_btn = reversed(to_btn)
             for btn in to_btn:
+                # if btn.bounds()[1] < 1300:
+                #     continue
                 print("开始识别...")
                 screen_shot = d.screenshot()
                 cropped_rect = (200, btn.bounds()[1] - 50, btn.bounds()[0] - 50, btn.bounds()[1] + 30)
@@ -296,7 +301,7 @@ while True:
                     continue
                 if fish_not_click(task_name):
                     continue
-                if have_clicked[task_name] >= 2:
+                if task_name in have_clicked and have_clicked[task_name] >= 2:
                     continue
                 need_click_view = btn
                 break
@@ -311,7 +316,15 @@ while True:
                 operate_task()
             else:
                 print("未找到可点击按钮", error_count)
-                break
+                if swipe_count > 10:
+                    break
+                if (swipe_count > 0 and find_count > 5) or swipe_count == 0:
+                    swipe_count += 1
+                    find_count = 0
+                    d.shell("input swipe 540 2000 540 1400 200")
+                    print("执行滑动")
+                    time.sleep(5)
+                find_count += 1
         else:
             break
     except Exception as e:
@@ -387,7 +400,7 @@ while True:
                 continue
             pt4 = find_button(screen_image, "./img/fish_prize.png")
             if pt4:
-                d.click(int(pt3[0]) + 100, int(pt3[1]) + 80)
+                d.click(int(pt4[0]) + 100, int(pt4[1]) + 80)
                 time.sleep(3)
                 continue
             pt5 = find_button(screen_image, "./img/fish_swing.png")
