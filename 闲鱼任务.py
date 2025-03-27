@@ -2,6 +2,7 @@ import time
 import re
 
 import uiautomator2 as u2
+
 from utils import get_current_app, fish_not_click, find_button, majority_chinese
 import ddddocr
 
@@ -61,13 +62,19 @@ def back_to_task(to_treasure=False):
 
 
 def check_popup():
+    continue_btn = d(className="android.widget.TextView", text="继续寻宝")
+    if continue_btn.exists:
+        continue_btn.click()
+        return
     screen_image1 = d.screenshot(format='opencv')
     pt11 = find_button(screen_image1, "./img/fish_close.png")
     if pt11:
         d.click(int(pt11[0]) + 15, int(pt11[1]) + 15)
+        return
     pt22 = find_button(screen_image1, "./img/fish_close2.png")
     if pt22:
         d.click(int(pt11[0]) + 15, int(pt11[1]) + 15)
+        return
 
 
 def operate_task(to_treasure=False):
@@ -380,6 +387,11 @@ while True:
             in_btn = d(className="android.widget.TextView", text="收下礼物")
             if in_btn.exists:
                 d.click(in_btn.center()[0], in_btn.center()[1])
+                time.sleep(3)
+                continue
+            continue_btn = d(className="android.widget.TextView", text="继续寻宝")
+            if continue_btn.exists:
+                continue_btn.click()
                 time.sleep(3)
                 continue
             screen_image = d.screenshot(format='opencv')
