@@ -36,22 +36,20 @@ d.watcher.when("O1CN012qVB9n1tvZ8ATEQGu_!!6000000005964-2-tps-144-144").click()
 d.watcher.when(xpath="//android.app.Dialog//android.widget.Button[@text='关闭']").click()
 d.watcher.start()
 while True:
-    farm_btn = d(className="android.widget.TextView", text="芭芭农场")
+    farm_btn = d(resourceId="com.alipay.android.phone.openplatform:id/app_text", className="android.widget.TextView", text="芭芭农场")
     if farm_btn.exists:
         d.click(farm_btn[0].center()[0], farm_btn[0].center()[1])
         time.sleep(5)
-        task_btn = d(className="android.widget.Button", text="任务列表")
-        if task_btn.exists:
-            break
-    else:
-        raise Exception("没有找到芭芭农场按钮")
+    task_btn = d(className="android.widget.Button", text="任务列表")
+    if task_btn.exists:
+        break
 while True:
     task_btn = d(className="android.widget.Button", text="任务列表")
     if task_btn.exists:
         d.click(task_btn[0].center()[0], task_btn[0].center()[1])
         time.sleep(5)
-        if d(text="做任务集肥料").exists:
-            break
+    if d(text="做任务集肥料").exists:
+        break
 finish_count = 0
 while True:
     try:
